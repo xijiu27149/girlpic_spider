@@ -4,8 +4,10 @@ import os
 import zipfile
 import time
 import operator
+
+#filedic = "E:\\asiantolick\\{}\\"
+filedic="/Volumes/ExtremePro/folder/asiantolick/{}/"
 url="https://asiantolick.com/ajax/buscar_posts.php?index={}"
-filedic = "E:\\asiantolick\\{}"
 download = "https://asiantolick.com/ajax/download_post.php?ver=1&dir={}&post_id={}&post_name={}"
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
@@ -21,6 +23,7 @@ def downloadfile(fname, furl):
                 f.write(res.content)
         myzip=zipfile.ZipFile(fname)     
         myzip.extractall(os.path.dirname(fname))
+        os.remove(fname)
         return furl
     except:
         return furl+"下载失败"
@@ -49,7 +52,7 @@ for i in range(8,39):
         postname = downhtml.xpath('//*[@id="download_post"]/@post_name')[0]
         download_request=download.format(dir,postid,postname)
         filepath=requests.get(url= download_request,headers=headers,proxies=proxy).text
-        fullfilename = "{}\\{}".format(picpath, os.path.basename(filepath))
+        fullfilename = "{}{}".format(picpath, os.path.basename(filepath))
         if(not os.path.exists(fullfilename)):
             downloadfile(fullfilename, filepath)
         print("page:{}_{}下载完成".format(i,title))

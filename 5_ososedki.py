@@ -4,7 +4,10 @@ from lxml import etree
 import math
 import os
 import time
-picpath = "E:\ososedki\{}\{}\{}"
+# picpathtemplate = "E:\ososedki\{}\{}\{}"
+picpath="/Volumes/ExtremePro/folder/osoedki/{}/"
+picpathtemplate="/Volumes/ExtremePro/folder/osoedki/{}/{}/{}"
+fileformate="{}/{}"
 url="https://ososedki.com/top?page={}"
 suburl = "https://ososedki.com{}"
 headers = {
@@ -30,14 +33,14 @@ def downloadpic(fname, furl):
 
 
 def checkfolderexist(classname,subdic, title):
-    pardic = "E:\\ososedki\\{}\\".format(classname)
+    pardic = picpath.format(classname)
     if not os.path.exists(pardic):
         os.makedirs(pardic)
     dirs = os.listdir(pardic)
     for dic in dirs:
-        checkdic = "E:\\ososedki\\{}\\{}\\{}".format(classname, dic, title)
+        checkdic = picpathtemplate.format(classname, dic, title)
         if(os.path.exists(checkdic) and subdic != dic):
-            shutil.move(checkdic, "E:\\ososedki\\{}\\{}\\{}".format(classname,subdic, title))
+            shutil.move(checkdic, picpathtemplate.format(classname,subdic, title))
             return
 
 pageindex=18
@@ -75,7 +78,7 @@ while pageindex<totalpage:
 
         targetdic = "{}_{}[{}P]".format(day, title, int(imgcount))
         checkfolderexist(classname,subdic,targetdic)
-        fulldic = picpath.format(classname, subdic, targetdic)
+        fulldic = picpathtemplate.format(classname, subdic, targetdic)
         if(not os.path.exists(fulldic)):
             os.makedirs(fulldic)
         detailpage = suburl.format(imgurl)
@@ -89,8 +92,8 @@ while pageindex<totalpage:
                 continue
             imgurl = img.xpath('a/@href')[0]
             imgname = os.path.basename(imgurl).split('?')[0]
-            imgfullname = "{}\{}".format(fulldic, imgname)
-            nofullnmae = "{}\{}".format(fulldic, "{}{}".format(
+            imgfullname = fileformate.format(fulldic, imgname)
+            nofullnmae = fileformate.format(fulldic, "{}{}".format(
                 str(imgindex).rjust(4, '0'), os.path.splitext(imgname)[-1]))
             if(not os.path.exists(imgfullname)):
                 if(not os.path.exists(nofullnmae)):

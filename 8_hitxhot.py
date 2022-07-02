@@ -10,8 +10,9 @@ headers = {
     "Content-Type": "text/html;charset=UTF-8"}
 
 urltemplate="https://hitxhot.com/hot?page={}"
-picpath = "H:\\folder\\hitxhot\\{}\\{}\\"
-
+#picpath = "H:\\folder\\hitxhot\\{}\\{}\\"
+pfolder="/Volumes/ExtremePro/folder/hitxhot/"
+picpath="/Volumes/ExtremePro/folder/hitxhot/{}/{}/"
 
 def downloadpic(fname, furl):    
     try:        
@@ -23,11 +24,10 @@ def downloadpic(fname, furl):
         return "no"
        
 
-def checkfolderexist( title):
-    pardic = "H:\\folder\\hitxhot\\"
-    dirs = os.listdir(pardic)
+def checkfolderexist( title):    
+    dirs = os.listdir(pfolder)
     for dic in dirs:
-        sondic=os.listdir(pardic+dic)
+        sondic=os.listdir(pfolder+dic)
         for son in sondic:
             if(son.split('[')[0]==title):
                 return son

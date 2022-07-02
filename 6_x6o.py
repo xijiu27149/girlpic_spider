@@ -10,7 +10,12 @@ from requests_html import HTMLSession
 import operator
 from PIL import Image
 import ssl
-picpath = "E:\\x6o\\{}\\{}\\"
+
+#pardic = "E:\\x6o\\"
+pardic="/Volumes/ExtremePro/folder/x6o"
+#picpath = "E:\\x6o\\{}\\{}\\"
+
+picpathtemplate="/Volumes/ExtremePro/folder/x6o/{}/{}/"
 url = "https://www.x6o.com/picture/page/{}"
 
 cookie = "cf_clearance=OeOPbDmnHs53DT0wczJbVPSF6CUBdCYKdFzvw9fWhbQ-1655294502-0-150; tt_ref=; _gid=GA1.2.501791040.1656424510; __cf_bm=Q5wDbGQr97sLtur1oJIh4OQ9218RKoNez57jFgVMlGw-1656476733-0-ARM1D7AdhW/d1sL/diyiMTO5YdS9G5Hhu0xIx+GuA1OTqKQh/Z7ijqrxWUaCDAtf4+yiUN1JPwPbbosQj4vU+Tki6U3UkoAGHcvvUzmDCsPzzgljo3up5xzxNKNHywT1/Q==; _ga_CHK7JCB72Z=GS1.1.1656476733.5.1.1656476790.0; _ga=GA1.2.266745953.1655294489"
@@ -52,19 +57,18 @@ def downloadpic(fname, furl):
         return furl+"下载失败"
 
 def checkfolderexist(subdic,title):
-    pardic = "E:\\x6o\\"
     dirs=os.listdir(pardic)
     for dic in dirs:
-        checkdic = "E:\\x6o\\{}\\{}".format(dic, title)
+        checkdic = picpathtemplate.format(dic, title)
         if(os.path.exists(checkdic) and subdic!=dic):
-            shutil.move(checkdic, "E:\\x6o\\{}\\{}".format(subdic, title))
+            shutil.move(checkdic, picpathtemplate.format(subdic, title))
             return 
 
 
 def downloadNofigure(subdic,items):   
     foldername = "{}[{}P]".format(title, len(imgitems))
     checkfolderexist(subdic, foldername)
-    fulldic = picpath.format(subdic, foldername)
+    fulldic = picpathtemplate.format(subdic, foldername)
     if(not os.path.exists(fulldic)):
         os.makedirs(fulldic)
     imgindex = 1
@@ -132,7 +136,7 @@ while pageindex < totalpage:
         foldername = "{}[{}P]".format(title, len(imgitems))
         checkfolderexist(subdic,foldername)
 
-        fulldic = picpath.format(subdic, foldername)
+        fulldic = picpathtemplate.format(subdic, foldername)
 
         if(not os.path.exists(fulldic)):
             os.makedirs(fulldic)
