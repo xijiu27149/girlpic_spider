@@ -5,11 +5,11 @@ import math
 import os
 import time
 
-picpath="H:\\folder\\soedki\\{}\\"
-picpathtemplate = "H:\\folder\\soedki\\{}\\{}\\{}"
+picpath = "H:\\folder\\ososedki\\{}\\"
+picpathtemplate = "H:\\folder\\ososedki\\{}\\{}\\{}"
 
-#picpath="/Volumes/ExtremePro/folder/osoedki/{}/"
-#picpathtemplate="/Volumes/ExtremePro/folder/osoedki/{}/{}/{}"
+#picpath="/Volumes/ExtremePro/folder/ososedki/{}/"
+#picpathtemplate="/Volumes/ExtremePro/folder/ososedki/{}/{}/{}"
 fileformate="{}/{}"
 url="https://ososedki.com/top?page={}"
 suburl = "https://ososedki.com{}"
