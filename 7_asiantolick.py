@@ -5,8 +5,8 @@ import zipfile
 import time
 import operator
 
-#filedic = "E:\\asiantolick\\{}\\"
-filedic="/Volumes/ExtremePro/folder/asiantolick/{}/"
+filedic = "H:\\folder\\asiantolick\\{}\\"
+#filedic="/Volumes/ExtremePro/folder/asiantolick/{}/"
 url="https://asiantolick.com/ajax/buscar_posts.php?index={}"
 download = "https://asiantolick.com/ajax/download_post.php?ver=1&dir={}&post_id={}&post_name={}"
 headers = {
@@ -28,7 +28,7 @@ def downloadfile(fname, furl):
     except:
         return furl+"下载失败"
 
-for i in range(8,39):
+for i in range(33,39):
     starturl=url.format(i)
     resp = requests.get(starturl, headers=headers, proxies=proxy)
     html = etree.HTML(resp.text)

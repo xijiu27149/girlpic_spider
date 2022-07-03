@@ -11,11 +11,12 @@ import operator
 from PIL import Image
 import ssl
 
-#pardic = "E:\\x6o\\"
-pardic="/Volumes/ExtremePro/folder/x6o"
-#picpath = "E:\\x6o\\{}\\{}\\"
+pardic = "H:\\folder\\x6o"
 
-picpathtemplate="/Volumes/ExtremePro/folder/x6o/{}/{}/"
+picpathtemplate = "H:\\folder\\x6o\\{}\\{}\\"
+
+#pardic="/Volumes/ExtremePro/folder/x6o"
+#picpathtemplate="/Volumes/ExtremePro/folder/x6o/{}/{}/"
 url = "https://www.x6o.com/picture/page/{}"
 
 cookie = "cf_clearance=OeOPbDmnHs53DT0wczJbVPSF6CUBdCYKdFzvw9fWhbQ-1655294502-0-150; tt_ref=; _gid=GA1.2.501791040.1656424510; __cf_bm=Q5wDbGQr97sLtur1oJIh4OQ9218RKoNez57jFgVMlGw-1656476733-0-ARM1D7AdhW/d1sL/diyiMTO5YdS9G5Hhu0xIx+GuA1OTqKQh/Z7ijqrxWUaCDAtf4+yiUN1JPwPbbosQj4vU+Tki6U3UkoAGHcvvUzmDCsPzzgljo3up5xzxNKNHywT1/Q==; _ga_CHK7JCB72Z=GS1.1.1656476733.5.1.1656476790.0; _ga=GA1.2.266745953.1655294489"
@@ -94,7 +95,7 @@ def downloadNofigure(subdic,items):
     time.sleep(3)
         
 
-pageindex = 70 #36
+pageindex = 73 #36
 totalpage = 652
 session=HTMLSession()
 while pageindex < totalpage:    
@@ -106,6 +107,9 @@ while pageindex < totalpage:
     items = html.xpath('//div[@class="col-md-4 col-sm-6 col-xs-6 ajax-post"]')
     itemindex=1
     for item in items:
+        if(pageindex==72 and itemindex<=10):
+            itemindex+=1
+            continue
         title = item.xpath('article/div[2]/header/h2/a/text()')[0]
         imgurl = item.xpath('article/div[1]/a/@href')[0]
         favcount = item.xpath('article/div[2]/header/div/span[3]/text()')[0]

@@ -10,9 +10,11 @@ headers = {
     "Content-Type": "text/html;charset=UTF-8"}
 
 urltemplate="https://hitxhot.com/hot?page={}"
-#picpath = "H:\\folder\\hitxhot\\{}\\{}\\"
-pfolder="/Volumes/ExtremePro/folder/hitxhot/"
-picpath="/Volumes/ExtremePro/folder/hitxhot/{}/{}/"
+
+pfolder="H:\\folder\\hitxhot\\"
+picpath = "H:\\folder\\hitxhot\\{}\\{}\\"
+#pfolder="/Volumes/ExtremePro/folder/hitxhot/"
+#picpath="/Volumes/ExtremePro/folder/hitxhot/{}/{}/"
 
 def downloadpic(fname, furl):    
     try:        
@@ -34,7 +36,7 @@ def checkfolderexist( title):
     return title
 
 
-for i in range(1,375):
+for i in range(5,375):
     starturl=urltemplate.format(i)
     resp=requests.get(url=starturl,headers=headers)
     html=etree.HTML(resp.text)
@@ -42,6 +44,9 @@ for i in range(1,375):
         '//div[@class="thumb-view post blish andard has-post-thumbnail hentry asian"]')
     itemindex=1
     for item in items:
+        if(i==2 and itemindex<21):
+            itemindex+=1
+            continue
         suburl=item.xpath('div/ins/a[1]/@href')[0]
         suburl = "https://hitxhot.com{}".format(suburl)
         title = item.xpath('div/a[1]/text()')[0]
@@ -63,7 +68,11 @@ for i in range(1,375):
         subhtml=etree.HTML(subresp.text)
         subpagecount = subhtml.xpath(
             '/html/body/div[1]/div[2]/div[4]/div[2]/div/div[1]/div/h2/text()')[0]
-        subpagecount=subpagecount.split('/')[1]
+        subpagecountarray=subpagecount.split('/')
+        if(len(subpagecountarray)<2):
+            subpagecount=1
+        else:
+             subpagecount=subpagecount.split('/')[1]
         imgindex=1
         for j in range(1,int(subpagecount)+1):
             pageurl="{}?page={}".format(suburl,j)

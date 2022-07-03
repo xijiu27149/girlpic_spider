@@ -4,9 +4,12 @@ from lxml import etree
 import math
 import os
 import time
-# picpathtemplate = "E:\ososedki\{}\{}\{}"
-picpath="/Volumes/ExtremePro/folder/osoedki/{}/"
-picpathtemplate="/Volumes/ExtremePro/folder/osoedki/{}/{}/{}"
+
+picpath="H:\\folder\\soedki\\{}\\"
+picpathtemplate = "H:\\folder\\soedki\\{}\\{}\\{}"
+
+#picpath="/Volumes/ExtremePro/folder/osoedki/{}/"
+#picpathtemplate="/Volumes/ExtremePro/folder/osoedki/{}/{}/{}"
 fileformate="{}/{}"
 url="https://ososedki.com/top?page={}"
 suburl = "https://ososedki.com{}"
@@ -43,7 +46,7 @@ def checkfolderexist(classname,subdic, title):
             shutil.move(checkdic, picpathtemplate.format(classname,subdic, title))
             return
 
-pageindex=18
+pageindex=25
 totalpage=4000
 
 while pageindex<totalpage:
@@ -54,15 +57,18 @@ while pageindex<totalpage:
     items = html.xpath('//div[@class="grid-item"]')
     itemindex=1
     for item in items:        
-        title = item.xpath('div[1]/a/text()')[0]         
-        imgurl = item.xpath('div[1]/a/@href')[0]
-        day = item.xpath('div[2]/span/text()')[0]
-        if len(item.xpath('div[2]/a/span/text()'))==0:
+        N=4
+        if(len(item.xpath('div'))==5):
+            N=5
+        title = item.xpath('div[{}]/a/text()'.format(N-3))[0]         
+        imgurl = item.xpath('div[{}]/a/@href'.format(N-3))[0]
+        day = item.xpath('div[{}]/span/text()'.format(N-2))[0]
+        if len(item.xpath('div[{}]/a/span/text()'.format(N-2)))==0:
             classname = "no"
         else:
-            classname = item.xpath('div[2]/a/span/text()')[0]
-        imgcount = item.xpath('div[3]/span/text()')[0]
-        favcount = item.xpath('div[4]/span/text()')[0]
+            classname = item.xpath('div[{}]/a/span/text()'.format(N-2))[0]
+        imgcount = item.xpath('div[{}]/span/text()'.format(N-1))[0]
+        favcount = item.xpath('div[{}]/span/text()'.format(N))[0]
         print("开始下载{}".format(title))
         if(int(favcount) > 100):
             max = math.ceil(int(favcount)/100)*100

@@ -10,8 +10,11 @@ urltemplate="https://picxx.icu/page/{}"
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
     "Content-Type": "text/html;charset=UTF-8"}
-ppfolder="/Volumes/ExtremePro/folder/nsfwpicx/"
-pfolder="/Volumes/ExtremePro/folder/nsfwpicx/{}/"
+
+ppfolder="H:\\folder\\nsfwpicx\\"
+pfolder="H:\\folder\\nsfwpicx\\{}\\"
+#ppfolder="/Volumes/ExtremePro/folder/nsfwpicx/"
+#pfolder="/Volumes/ExtremePro/folder/nsfwpicx/{}/"
 
 def downloadpic(fname, furl):    
     try:        
@@ -29,7 +32,7 @@ def checkfolderexist( title):
                 return dic
     return title  
 
-for i in range(1,304):
+for i in range(2,304):
     starturl=urltemplate.format(i)
     resp=requests.get(url=starturl,headers=headers)
     resphtml=etree.HTML(resp.text)
@@ -48,6 +51,7 @@ for i in range(1,304):
         fulldic=pfolder.format(folder)
         if(not os.path.exists(fulldic)):
             os.makedirs(fulldic)
+        suburl="{}#acpwd-{}".format(suburl,os.path.basename(suburl).split(".")[0])
         subresp=requests.get(url=suburl,headers=headers)
         subhtml=etree.HTML(subresp.text)
         imgs=subhtml.xpath('//a[@rel="noopener"]')
