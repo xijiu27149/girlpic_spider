@@ -27,12 +27,14 @@ def downloadpic(fname, furl):
     
 def checkfolderexist( title):    
     dirs = os.listdir(ppfolder)
-    for dic in dirs:
-        if(dic.split('[')[0]==title):
-                return dic
+    for dir in dirs:
+        temp=dir.split('[')
+        temp=dir.replace("[{}".format(temp[len(temp)-1]),"")
+        if(temp == title):
+            return dir
     return title  
 
-for i in range(2,304):
+for i in range(7,304):
     starturl=urltemplate.format(i)
     resp=requests.get(url=starturl,headers=headers)
     resphtml=etree.HTML(resp.text)

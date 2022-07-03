@@ -10,6 +10,8 @@ from requests_html import HTMLSession
 import operator
 from PIL import Image
 import ssl
+import urllib3
+urllib3.disable_warnings()
 
 pardic = "H:\\folder\\x6o"
 
@@ -95,7 +97,7 @@ def downloadNofigure(subdic,items):
     time.sleep(3)
         
 
-pageindex = 73 #36
+pageindex = 77 #36
 totalpage = 652
 session=HTMLSession()
 while pageindex < totalpage:    

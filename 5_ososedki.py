@@ -46,7 +46,7 @@ def checkfolderexist(classname,subdic, title):
             shutil.move(checkdic, picpathtemplate.format(classname,subdic, title))
             return
 
-pageindex=25
+pageindex=39
 totalpage=4000
 
 while pageindex<totalpage:
@@ -105,7 +105,10 @@ while pageindex<totalpage:
                 if(not os.path.exists(nofullnmae)):
                     downloadpic(nofullnmae, imgurl)
             else:
-                os.rename(imgfullname, nofullnmae)
+                if(os.path.exists(nofullnmae)):
+                    os.remove(imgfullname)
+                else:
+                    os.rename(imgfullname, nofullnmae)
             print("page:{}【{}/{}】_{}_{}【{}/{}】-{}下载完毕".format(pageindex, itemindex,
                   len(items), classname, title, imgindex, len(imgitems), nofullnmae))
             imgindex+=1
