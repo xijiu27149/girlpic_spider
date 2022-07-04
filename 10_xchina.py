@@ -26,18 +26,26 @@ proxy = {'http': 'http://127.0.0.1:7890', 'https': 'http://127.0.0.1:7890'}
 pdictemplate="/Volumes/ExtremePro/folder/xchina/{}/"
 openner = request.build_opener(httpproxy_handler)
 
+RETRYTIME=0
 def downloadpic(fname, furl):
+    global RETRYTIME
     try:
         req=request.Request(furl,headers=headers)
         res=openner.open(req)     
         with open(fname, 'wb')as f:
             f.write(res.read())
         return furl
-    except:
-        return "no"
+    except:      
+        if(RETRYTIME == 2):
+            RETRYTIME = 0
+            return "no"
+        RETRYTIME += 1
+        time.sleep(1)
+        downloadpic(fname, furl)
+        return furl+"下载失败"
 
 
-for i in range(4,351):
+for i in range(14,351):
     starturl=urltemplate.format(i)
     req = request.Request(starturl, headers=headers)
     resp = openner.open(req)
@@ -45,7 +53,7 @@ for i in range(4,351):
     items=resphtml.xpath('//div[@class="item"]')
     itemindex=1
     for item in items:
-        if(i==4 and itemindex<14):
+        if(i==14 and itemindex<15):
             itemindex+=1
             continue
         suburl = "https://xchina.co{}".format(item.xpath('a/@href')[0])

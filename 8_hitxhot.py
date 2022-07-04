@@ -40,7 +40,7 @@ def checkfolderexist( title):
     return title
 
 
-for i in range(10,375):
+for i in range(18,375):
     starturl=urltemplate.format(i)
     resp=requests.get(url=starturl,headers=headers)
     html=etree.HTML(resp.text)
@@ -48,7 +48,7 @@ for i in range(10,375):
         '//div[@class="thumb-view post blish andard has-post-thumbnail hentry asian"]')
     itemindex=1
     for item in items:
-        if(i==5 and itemindex<23):
+        if(i==18 and itemindex<16):
             itemindex+=1
             continue
         suburl=item.xpath('div/ins/a[1]/@href')[0]
@@ -100,7 +100,8 @@ for i in range(10,375):
         
         if(not os.path.dirname(picfolder)[-2:]=="P]"):
             newpicfolder = "{}[{}P]".format(os.path.dirname(picfolder), imgindex-1)
-            os.rename(picfolder,newpicfolder)
+            if(not os.path.exists(newpicfolder)):
+                os.rename(picfolder,newpicfolder)
         itemindex+=1
         time.sleep(3)    
     time.sleep(3)

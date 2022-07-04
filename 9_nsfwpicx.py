@@ -60,7 +60,7 @@ for i in range(11,304):
         suburl="{}#acpwd-{}".format(suburl,os.path.basename(suburl).split(".")[0])
         subresp=requests.get(url=suburl,headers=headers)
         subhtml=etree.HTML(subresp.text)
-        imgs=subhtml.xpath('//div[@clas="entry-content"]/p')
+        imgs=subhtml.xpath('//a[@rel="noopener"]')
         imgindex=1
         for img in imgs:
             imgurl=img.xpath('img/@src')[0]

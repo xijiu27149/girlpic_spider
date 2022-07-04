@@ -41,11 +41,10 @@ def downloadpicnopro(fname, furl):
     except Exception as e:
         return 0
 
-
+RETRYTIME=0
 def downloadpic(fname, furl):
     global RETRYTIME
     try:
-        RETRYTIME = 0
         res = requests.get(furl, headers=headers, proxies=proxy,allow_redirects=False)
         with open(fname, 'wb')as f:
             f.write(res.content)
@@ -57,7 +56,7 @@ def downloadpic(fname, furl):
             RETRYTIME = 0
             return "no"
         RETRYTIME += 1
-        time.sleep(20)
+        time.sleep(1)
         downloadpic(fname, furl)
         return furl+"下载失败"
 
@@ -99,7 +98,7 @@ def downloadNofigure(subdic,items):
     time.sleep(3)
         
 
-pageindex = 79 #36
+pageindex = 87 #36
 totalpage = 652
 session=HTMLSession()
 while pageindex < totalpage:    
@@ -111,7 +110,7 @@ while pageindex < totalpage:
     items = html.xpath('//div[@class="col-md-4 col-sm-6 col-xs-6 ajax-post"]')
     itemindex=1
     for item in items:
-        if(pageindex==79 and itemindex<3):
+        if(pageindex==87 and itemindex<3):
             itemindex+=1
             continue
         title = item.xpath('article/div[2]/header/h2/a/text()')[0]
