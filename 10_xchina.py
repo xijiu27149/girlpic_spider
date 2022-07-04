@@ -6,12 +6,13 @@ import time
 import operator
 import math
 from requests_html import HTMLSession
+import ssl
 urltemplate="https://xchina.co/photos/kind-1/{}.html"
 #urltemplate="https://xchina.co/photos/kind-2/{}.html" 171页
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
     "Content-Type": "text/html;charset=UTF-8"}
-
+ssl._create_default_https_context = ssl._create_unverified_context
 httpproxy_handler = request.ProxyHandler(
     {
         "http": "http://127.0.0.1:7890",
@@ -19,7 +20,10 @@ httpproxy_handler = request.ProxyHandler(
     },
 )
 proxy = {'http': 'http://127.0.0.1:7890', 'https': 'http://127.0.0.1:7890'}
-pdictemplate = "H:\\folder\\xchina\\{}\\"
+
+#pdictemplate = "H:\\folder\\xchina\\{}\\"
+#pdictemplate="/Users/dujingwei/Movies/folder/xchina/{}/"
+pdictemplate="/Volumes/ExtremePro/folder/xchina/{}/"
 openner = request.build_opener(httpproxy_handler)
 
 def downloadpic(fname, furl):
@@ -33,7 +37,7 @@ def downloadpic(fname, furl):
         return "no"
 
 
-for i in range(2,351):
+for i in range(4,351):
     starturl=urltemplate.format(i)
     req = request.Request(starturl, headers=headers)
     resp = openner.open(req)
@@ -41,6 +45,9 @@ for i in range(2,351):
     items=resphtml.xpath('//div[@class="item"]')
     itemindex=1
     for item in items:
+        if(i==4 and itemindex<14):
+            itemindex+=1
+            continue
         suburl = "https://xchina.co{}".format(item.xpath('a/@href')[0])
         platname=item.xpath('div[1]/div[1]/a/text()')[0]
         modelname = item.xpath('div[1]/div[2]/a/text()')

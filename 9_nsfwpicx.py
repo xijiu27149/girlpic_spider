@@ -11,11 +11,12 @@ headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
     "Content-Type": "text/html;charset=UTF-8"}
 
-ppfolder="H:\\folder\\nsfwpicx\\"
-pfolder="H:\\folder\\nsfwpicx\\{}\\"
-#ppfolder="/Volumes/ExtremePro/folder/nsfwpicx/"
-#pfolder="/Volumes/ExtremePro/folder/nsfwpicx/{}/"
-
+#ppfolder="H:\\folder\\nsfwpicx\\"
+#pfolder="H:\\folder\\nsfwpicx\\{}\\"
+#ppfolder="/Users/dujingwei/Movies/folder/nsfwpicx/"
+#pfolder="/Users/dujingwei/Movies/folder/nsfwpicx/{}/"
+ppfolder="/Volumes/ExtremePro/folder/nsfwpicx/"
+pfolder="/Volumes/ExtremePro/folder/nsfwpicx/{}/"
 def downloadpic(fname, furl):    
     try:        
         res = requests.get(furl, headers=headers)
@@ -34,13 +35,16 @@ def checkfolderexist( title):
             return dir
     return title  
 
-for i in range(7,304):
+for i in range(11,304):
     starturl=urltemplate.format(i)
     resp=requests.get(url=starturl,headers=headers)
     resphtml=etree.HTML(resp.text)
     items=resphtml.xpath('//div[@class="featured-content content-area fullwidth-area-blog"]/main/article')
     itemindex=1
     for item in items:
+        if(i==11 and itemindex<=2):
+            itemindex+=1
+            continue
         suburl=item.xpath('a/@href')[0]
         daystr=item.xpath('a/span[2]/span/span/text()')[0]
         titlearray=item.xpath('a/span[2]/span/h2/text()')        
@@ -56,7 +60,7 @@ for i in range(7,304):
         suburl="{}#acpwd-{}".format(suburl,os.path.basename(suburl).split(".")[0])
         subresp=requests.get(url=suburl,headers=headers)
         subhtml=etree.HTML(subresp.text)
-        imgs=subhtml.xpath('//a[@rel="noopener"]')
+        imgs=subhtml.xpath('//div[@clas="entry-content"]/p')
         imgindex=1
         for img in imgs:
             imgurl=img.xpath('img/@src')[0]

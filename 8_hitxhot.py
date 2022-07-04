@@ -11,10 +11,12 @@ headers = {
 
 urltemplate="https://hitxhot.com/hot?page={}"
 
-pfolder="H:\\folder\\hitxhot\\"
-picpath = "H:\\folder\\hitxhot\\{}\\{}\\"
-#pfolder="/Volumes/ExtremePro/folder/hitxhot/"
-#picpath="/Volumes/ExtremePro/folder/hitxhot/{}/{}/"
+#pfolder="H:\\folder\\hitxhot\\"
+#picpath = "H:\\folder\\hitxhot\\{}\\{}\\"
+#pfolder="/Users/dujingwei/Movies/folder/hitxhot/"
+#picpath="/Users/dujingwei/Movies/folder/hitxhot/{}/{}/"
+pfolder="/Volumes/ExtremePro/folder/hitxhot/"
+picpath="/Volumes/ExtremePro/folder/hitxhot/{}/{}/"
 
 def downloadpic(fname, furl):    
     try:        
@@ -29,6 +31,8 @@ def downloadpic(fname, furl):
 def checkfolderexist( title):    
     dirs = os.listdir(pfolder)
     for dic in dirs:
+        if(dic[0]=="."):
+            continue
         sondic=os.listdir(pfolder+dic)
         for son in sondic:
             if(son.split('[')[0]==title):
@@ -36,7 +40,7 @@ def checkfolderexist( title):
     return title
 
 
-for i in range(5,375):
+for i in range(10,375):
     starturl=urltemplate.format(i)
     resp=requests.get(url=starturl,headers=headers)
     html=etree.HTML(resp.text)
