@@ -10,21 +10,29 @@ urltemplate="https://picxx.icu/page/{}"
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
     "Content-Type": "text/html;charset=UTF-8"}
-
-#ppfolder="H:\\folder\\nsfwpicx\\"
-#pfolder="H:\\folder\\nsfwpicx\\{}\\"
+proxy = {'http': 'http://127.0.0.1:7890', 'https': 'http://127.0.0.1:7890'}
+ppfolder="H:\\folder\\nsfwpicx\\"
+pfolder="H:\\folder\\nsfwpicx\\{}\\"
 #ppfolder="/Users/dujingwei/Movies/folder/nsfwpicx/"
 #pfolder="/Users/dujingwei/Movies/folder/nsfwpicx/{}/"
-ppfolder="/Volumes/ExtremePro/folder/nsfwpicx/"
-pfolder="/Volumes/ExtremePro/folder/nsfwpicx/{}/"
+#ppfolder="/Volumes/ExtremePro/folder/nsfwpicx/"
+#pfolder="/Volumes/ExtremePro/folder/nsfwpicx/{}/"
+RETRYTIME = 0
 def downloadpic(fname, furl):    
+    global RETRYTIME
     try:        
-        res = requests.get(furl, headers=headers)
+        res = requests.get(furl, headers=headers,proxies=proxy)
         with open(fname, 'wb')as f:
             f.write(res.content)
         return furl
     except:       
-        return "no"
+        if(RETRYTIME == 2):
+            RETRYTIME = 0
+            return "no"
+        RETRYTIME += 1
+        time.sleep(20)
+        downloadpic(fname, furl)
+        return furl+"下载失败"
     
 def checkfolderexist( title):    
     dirs = os.listdir(ppfolder)
@@ -35,21 +43,21 @@ def checkfolderexist( title):
             return dir
     return title  
 
-for i in range(11,304):
+for i in range(13,304):
     starturl=urltemplate.format(i)
-    resp=requests.get(url=starturl,headers=headers)
+    resp = requests.get(url=starturl, headers=headers, proxies=proxy)
     resphtml=etree.HTML(resp.text)
     items=resphtml.xpath('//div[@class="featured-content content-area fullwidth-area-blog"]/main/article')
     itemindex=1
     for item in items:
-        if(i==11 and itemindex<=2):
+        if(i==13 and itemindex<6):
             itemindex+=1
             continue
         suburl=item.xpath('a/@href')[0]
         daystr=item.xpath('a/span[2]/span/span/text()')[0]
         titlearray=item.xpath('a/span[2]/span/h2/text()')        
         if(len(titlearray)==0):
-            title="{}_{}".format(i,itemindex)
+            title=item.xpath('@id')[0].split('-')[1]
         else:
             title=titlearray[0]
         folder="【{}】{}".format(daystr,title)
@@ -57,15 +65,20 @@ for i in range(11,304):
         fulldic=pfolder.format(folder)
         if(not os.path.exists(fulldic)):
             os.makedirs(fulldic)
-        suburl="{}#acpwd-{}".format(suburl,os.path.basename(suburl).split(".")[0])
-        subresp=requests.get(url=suburl,headers=headers)
+        #suburl="{}#acpwd-{}".format(suburl,os.path.basename(suburl).split(".")[0])
+        subresp = requests.get(url=suburl, headers=headers, proxies=proxy)
         subhtml=etree.HTML(subresp.text)
-        imgs=subhtml.xpath('//a[@rel="noopener"]')
+        imgs = subhtml.xpath('//div[@class="entry-content"]/p/a/img')
         imgindex=1
         for img in imgs:
-            imgurl=img.xpath('img/@src')[0]
-            imgurl=imgurl.replace("/th/","/i/")
-            imgname=os.path.basename(imgurl)
+            imgpageurl=img.xpath('@src')[0]
+            if(operator.contains(imgpageurl,'imgur')):
+                imgurl = "https://i.imgur.com/{}.jpeg".format(
+                    os.path.basename(imgpageurl).split('.')[0])
+            else:
+                imgurl = img.xpath('@src')[0]
+                imgurl = imgurl.replace("/th/", "/i/")
+            imgname = os.path.basename(imgurl)
             fullfilename = "{}{}".format(fulldic, "{}{}".format(
                     str(imgindex).rjust(3, '0'), os.path.splitext(imgname)[-1]))
             if(not os.path.exists(fullfilename)):

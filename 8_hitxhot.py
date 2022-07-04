@@ -11,21 +11,29 @@ headers = {
 
 urltemplate="https://hitxhot.com/hot?page={}"
 
-#pfolder="H:\\folder\\hitxhot\\"
-#picpath = "H:\\folder\\hitxhot\\{}\\{}\\"
+pfolder="H:\\folder\\hitxhot\\"
+picpath = "H:\\folder\\hitxhot\\{}\\{}\\"
 #pfolder="/Users/dujingwei/Movies/folder/hitxhot/"
 #picpath="/Users/dujingwei/Movies/folder/hitxhot/{}/{}/"
-pfolder="/Volumes/ExtremePro/folder/hitxhot/"
-picpath="/Volumes/ExtremePro/folder/hitxhot/{}/{}/"
+#pfolder="/Volumes/ExtremePro/folder/hitxhot/"
+#picpath="/Volumes/ExtremePro/folder/hitxhot/{}/{}/"
 
-def downloadpic(fname, furl):    
-    try:        
-        res = requests.get(furl, headers=headers)
+RETRYTIME = 0
+def downloadpic(fname, furl):
+    global RETRYTIME
+    try:
+        res = requests.get(furl, headers=headers, proxies=proxy)
         with open(fname, 'wb')as f:
-            f.write(res.content)
+            f.write(res.read())
         return furl
-    except:       
-        return "no"
+    except:
+        if(RETRYTIME == 2):
+            RETRYTIME = 0
+            return "no"
+        RETRYTIME += 1
+        time.sleep(20)
+        downloadpic(fname, furl)
+        return furl+"下载失败"
        
 
 def checkfolderexist( title):    

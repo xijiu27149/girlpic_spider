@@ -5,14 +5,14 @@ import math
 import os
 import time
 
-#picpath = "H:\\folder\\ososedki\\{}\\"
-#picpathtemplate = "H:\\folder\\ososedki\\{}\\{}\\{}"
+picpath = "H:\\folder\\ososedki\\{}\\"
+picpathtemplate = "H:\\folder\\ososedki\\{}\\{}\\{}"
 
 #picpath="/Users/dujingwei/Movies/folder/ososedki/{}/"
 #picpathtemplate="/Users/dujingwei/Movies/folder/ososedki/{}/{}/{}"
 
-picpath="/Volumes/ExtremePro/folder/ososedki/{}/"
-picpathtemplate="/Volumes/ExtremePro/folder/ososedki/{}/{}/{}"
+#picpath="/Volumes/ExtremePro/folder/ososedki/{}/"
+#picpathtemplate="/Volumes/ExtremePro/folder/ososedki/{}/{}/{}"
 fileformate="{}/{}"
 url="https://ososedki.com/top?page={}"
 suburl = "https://ososedki.com{}"
@@ -49,7 +49,7 @@ def checkfolderexist(classname,subdic, title):
             shutil.move(checkdic, picpathtemplate.format(classname,subdic, title))
             return
 
-pageindex=66
+pageindex=92
 totalpage=4000
 
 while pageindex<totalpage:
@@ -60,7 +60,7 @@ while pageindex<totalpage:
     items = html.xpath('//div[@class="grid-item"]')
     itemindex=1
     for item in items:    
-        if(pageindex==66 and itemindex<=6):
+        if(pageindex==68 and itemindex<=7):
             itemindex+=1
             continue    
         N=4
