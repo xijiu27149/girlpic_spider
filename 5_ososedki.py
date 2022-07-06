@@ -49,8 +49,13 @@ def checkfolderexist(classname,subdic, title):
             shutil.move(checkdic, picpathtemplate.format(classname,subdic, title))
             return
 
-pageindex=92
+
 totalpage=4000
+
+currentpage=161
+currentitem=1
+
+pageindex = currentpage
 
 while pageindex<totalpage:
     print("开始下载第{}页...".format(pageindex))
@@ -60,7 +65,7 @@ while pageindex<totalpage:
     items = html.xpath('//div[@class="grid-item"]')
     itemindex=1
     for item in items:    
-        if(pageindex==68 and itemindex<=7):
+        if(pageindex == currentpage and itemindex < currentitem):
             itemindex+=1
             continue    
         N=4
@@ -115,7 +120,7 @@ while pageindex<totalpage:
                     os.remove(imgfullname)
                 else:
                     os.rename(imgfullname, nofullnmae)
-            print("page:{}【{}/{}】_{}_{}【{}/{}】-{}下载完毕".format(pageindex, itemindex,
+            print("page:{}【{}/{}】_{}_{}【{}/{}】-{}下载完毕".format("【{}/4000】".format(pageindex), itemindex,
                   len(items), classname, title, imgindex, len(imgitems), nofullnmae))
             imgindex+=1
         print("page:{}【{}/{}】_{}_{}下载完毕".format(pageindex,

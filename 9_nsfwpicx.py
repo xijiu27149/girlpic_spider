@@ -43,23 +43,33 @@ def checkfolderexist( title):
             return dir
     return title  
 
-for i in range(13,304):
+
+totalpage = 305
+currentpage = 81
+currentitem = 7
+
+for i in range(currentpage, totalpage+1):
     starturl=urltemplate.format(i)
     resp = requests.get(url=starturl, headers=headers, proxies=proxy)
     resphtml=etree.HTML(resp.text)
     items=resphtml.xpath('//div[@class="featured-content content-area fullwidth-area-blog"]/main/article')
     itemindex=1
     for item in items:
-        if(i==13 and itemindex<6):
+        if(i == currentpage and itemindex < currentitem):
             itemindex+=1
             continue
         suburl=item.xpath('a/@href')[0]
-        daystr=item.xpath('a/span[2]/span/span/text()')[0]
-        titlearray=item.xpath('a/span[2]/span/h2/text()')        
+        daystr=item.xpath('a/span[2]/span/span/text()')
+        if(len(daystr)==0):
+            daystr = item.xpath('a/span/span/text()')
+        daystr=daystr[0]
+        titlearray = item.xpath('a/span[2]/span/h2/text()')
         if(len(titlearray)==0):
             title=item.xpath('@id')[0].split('-')[1]
         else:
-            title=titlearray[0]
+            title=titlearray[0].strip()
+            if(len(title)==0):
+                title = item.xpath('@id')[0].split('-')[1]
         folder="【{}】{}".format(daystr,title)
         folder = checkfolderexist(folder)
         fulldic=pfolder.format(folder)
@@ -83,7 +93,7 @@ for i in range(13,304):
                     str(imgindex).rjust(3, '0'), os.path.splitext(imgname)[-1]))
             if(not os.path.exists(fullfilename)):
                 downloadpic(fullfilename,imgurl)
-            print("page:{}【{}/{}】_{}_【{}/{}】-{}下载完毕".format(i, itemindex, len(items),
+            print("page:【{}/{}】item:【{}/{}】_{}_【{}/{}】-{}下载完毕".format(i,totalpage, itemindex, len(items),
                      title, imgindex, len(imgs), fullfilename))
             imgindex+=1
         if(not os.path.dirname(fulldic)[-2:]=="P]"):

@@ -1,4 +1,3 @@
-import imp
 from logging import exception
 import shutil
 import requests
@@ -98,8 +97,13 @@ def downloadNofigure(subdic,items):
     time.sleep(3)
         
 
-pageindex = 92 #36
+
 totalpage = 652
+currentpage = 116
+currentitem = 16
+
+pageindex = currentpage  
+
 session=HTMLSession()
 while pageindex < totalpage:    
     print("开始下载第{}页...".format(pageindex))    
@@ -110,7 +114,7 @@ while pageindex < totalpage:
     items = html.xpath('//div[@class="col-md-4 col-sm-6 col-xs-6 ajax-post"]')
     itemindex=1
     for item in items:
-        if(pageindex==92 and itemindex<2):
+        if(pageindex == currentpage and itemindex < currentitem):
             itemindex+=1
             continue
         title = item.xpath('article/div[2]/header/h2/a/text()')[0]
@@ -166,7 +170,7 @@ while pageindex < totalpage:
                     downloadpic(nofullnmae, imgurl)
             else:
                 os.rename(imgfullname,nofullnmae)
-            print("page:{}【{}/{}】_{}_{}_【{}/{}】-{}下载完毕".format(pageindex, itemindex, len(items),
+            print("page:{}【{}/{}】_{}_{}_【{}/{}】-{}下载完毕".format("【{}/652】".format(pageindex), itemindex, len(items),
                   subdic, title, imgindex, len(imgitems), nofullnmae))
             imgindex+=1
         

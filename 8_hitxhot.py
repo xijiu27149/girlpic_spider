@@ -8,7 +8,7 @@ import math
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
     "Content-Type": "text/html;charset=UTF-8"}
-
+proxy = {'http': 'http://127.0.0.1:7890', 'https': 'http://127.0.0.1:7890'}
 urltemplate="https://hitxhot.com/hot?page={}"
 
 pfolder="H:\\folder\\hitxhot\\"
@@ -22,9 +22,9 @@ RETRYTIME = 0
 def downloadpic(fname, furl):
     global RETRYTIME
     try:
-        res = requests.get(furl, headers=headers, proxies=proxy)
+        res = requests.get(furl, headers=headers,proxies=proxy)
         with open(fname, 'wb')as f:
-            f.write(res.read())
+            f.write(res.content)
         return furl
     except:
         if(RETRYTIME == 2):
@@ -47,22 +47,26 @@ def checkfolderexist( title):
                 return son
     return title
 
+totalpage=381
 
-for i in range(18,375):
+currentpage = 29
+currentitem = 9
+
+for i in range(currentpage, totalpage+1):
     starturl=urltemplate.format(i)
-    resp=requests.get(url=starturl,headers=headers)
+    resp = requests.get(url=starturl, headers=headers, proxies=proxy)
     html=etree.HTML(resp.text)
     items = html.xpath(
         '//div[@class="thumb-view post blish andard has-post-thumbnail hentry asian"]')
     itemindex=1
     for item in items:
-        if(i==18 and itemindex<16):
+        if(i == currentpage and itemindex < currentitem):
             itemindex+=1
             continue
         suburl=item.xpath('div/ins/a[1]/@href')[0]
         suburl = "https://hitxhot.com{}".format(suburl)
         title = item.xpath('div/a[1]/text()')[0]
-        title=title.replace("/","")
+        title = title.replace("/", "").replace("*", " ").replace(":", " ")
         favcount = item.xpath('div/ins/a[1]/span/span/text()')[0]
         favcount=favcount.replace("Views","")
         foldername =title
@@ -77,10 +81,14 @@ for i in range(18,375):
         picfolder=picpath.format(subdic,foldername)        
         if(not os.path.exists(picfolder)):
             os.makedirs(picfolder)
-        subresp=requests.get(url=suburl,headers=headers)
+        subresp = requests.get(url=suburl, headers=headers, proxies=proxy)
         subhtml=etree.HTML(subresp.text)
         subpagecount = subhtml.xpath(
-            '/html/body/div[1]/div[2]/div[4]/div[2]/div/div[1]/div/h2/text()')[0]
+            '/html/body/div[1]/div[2]/div[4]/div[2]/div/div[1]/div/h2/text()')
+        if (len(subpagecount)==0):
+            subpagecount = ""
+        else:
+            subpagecount=subpagecount[0]
         subpagecountarray=subpagecount.split('/')
         
         if(len(subpagecountarray)<2):
@@ -92,7 +100,8 @@ for i in range(18,375):
         imgindex=1
         for j in range(1,int(subpagecount)+1):
             pageurl="{}?page={}".format(suburl,j)
-            pageresp=requests.get(url=pageurl,headers=headers)
+            pageresp = requests.get(
+                url=pageurl, headers=headers, proxies=proxy)
             pagehtml=etree.HTML(pageresp.text)
             imgs = pagehtml.xpath('//div[@class="contentme"]/img')
             for img in imgs:
@@ -102,7 +111,7 @@ for i in range(18,375):
                     str(imgindex).rjust(3, '0'), os.path.splitext(imgname)[-1]))
                 if(not os.path.exists(nofullnmae)):
                     downloadpic(nofullnmae,imgurl)
-                print("page:{}【{}/{}】_{}_{}_【{}/{}_{}】-{}下载完毕".format(i, itemindex, len(items),
+                print("page:【{}/{}】Item:【{}/{}】_{}_{}_imgpage:【{}/{}_{}】-{}下载完毕".format(i,totalpage, itemindex, len(items),
                     subdic, title, j, int(subpagecount), imgindex, nofullnmae))
                 imgindex+=1
         

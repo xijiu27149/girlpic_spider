@@ -1,4 +1,5 @@
 import shutil
+import sys
 from urllib import request
 from lxml import etree
 import os
@@ -44,16 +45,36 @@ def downloadpic(fname, furl):
         downloadpic(fname, furl)
         return furl+"下载失败"
 
+def getpagehtml(pageurl):
+    global RETRYTIME
+    try:
+        req = request.Request(pageurl, headers=headers)
+        resp = openner.open(req)
+        return resp.read()
+    except:
+        if(RETRYTIME == 3):
+            RETRYTIME = 0
+            return "failed"
+        RETRYTIME += 1
+        print("{}请求超时，20秒后重试第{}次".format(pageurl,RETRYTIME))
+        time.sleep(20)
+        getpagehtml(pageurl)
 
-for i in range(21,351):
-    starturl=urltemplate.format(i)
-    req = request.Request(starturl, headers=headers)
-    resp = openner.open(req)
-    resphtml=etree.HTML(resp.read())
+alltotalpage = 353
+currentpage = 49
+currentitem = 14
+
+for i in range(currentpage, alltotalpage+1):
+    starturl=urltemplate.format(i)   
+    resphtmltext = getpagehtml(starturl)
+    if(resphtmltext == "failed"):
+        print("请求超时")
+        sys.exit()
+    resphtml = etree.HTML(resphtmltext)
     items=resphtml.xpath('//div[@class="item"]')
     itemindex=1
     for item in items:
-        if(i==21 and itemindex<13):
+        if(i == currentpage and itemindex < currentitem):
             itemindex+=1
             continue
         suburl = "https://xchina.co{}".format(item.xpath('a/@href')[0])
@@ -70,9 +91,12 @@ for i in range(21,351):
             modelname.strip(), platname.strip(), title.strip(), piccountstr))
         if(not os.path.exists(subfolder)):
             os.makedirs(subfolder)
-        subreq = request.Request(suburl, headers=headers)
-        subresp=openner.open(subreq)
-        subhtml = etree.HTML(subresp.read())
+
+        subhtmltext = getpagehtml(suburl)
+        if(subhtmltext == "failed"):
+            print("请求超时")
+            sys.exit()
+        subhtml = etree.HTML(subhtmltext)      
         pages=subhtml.xpath('//div[@class="pager"]/div/a')
         totalpage=pages[len(pages)-2].xpath('text()')[0]
         imgindex=1
@@ -80,9 +104,11 @@ for i in range(21,351):
             imgpageurl = suburl.replace(os.path.splitext(suburl)[-1],"")
             imgpageurl=imgpageurl+"/{}.html"
             imgpageurl = imgpageurl.format(j)
-            imgpagereq = request.Request(imgpageurl, headers=headers)
-            imgpageresp = openner.open(imgpagereq) 
-            imgpagehtml = etree.HTML(imgpageresp.read())
+            imgpagehtmltext = getpagehtml(imgpageurl)
+            if(imgpagehtmltext == "failed"):
+                print("请求超时")
+                sys.exit()
+            imgpagehtml = etree.HTML(imgpagehtmltext)
             videos=imgpagehtml.xpath('//video[@class="player"]/source/@src')
             if(len(videos)>0):
                 videourl=videos[0]
@@ -100,7 +126,7 @@ for i in range(21,351):
                     str(imgindex).rjust(3, '0'), os.path.splitext(imgurl)[-1]))
                 if(not os.path.exists(imgname)):
                     downloadpic(imgname,imgurl)
-                print("page:{}【{}/{}】_{}_第【{}/{}】页_总【{}/{}】-{}下载完毕".format(i, itemindex, len(items),
+                print("page:【{}/{}】item:【{}/{}】_{}_第【{}/{}】页_总【{}/{}】-{}下载完毕".format(i, alltotalpage, itemindex, len(items),
                     title, j, int(totalpage), imgindex,piccount, imgname))
                 imgindex+=1
             time.sleep(3)
