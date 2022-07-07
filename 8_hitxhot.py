@@ -49,8 +49,8 @@ def checkfolderexist( title):
 
 totalpage=381
 
-currentpage = 29
-currentitem = 9
+currentpage = 38
+currentitem = 21
 
 for i in range(currentpage, totalpage+1):
     starturl=urltemplate.format(i)
@@ -66,7 +66,8 @@ for i in range(currentpage, totalpage+1):
         suburl=item.xpath('div/ins/a[1]/@href')[0]
         suburl = "https://hitxhot.com{}".format(suburl)
         title = item.xpath('div/a[1]/text()')[0]
-        title = title.replace("/", "").replace("*", " ").replace(":", " ")
+        title = title.replace("/", "").replace("*",
+                                               " ").replace(":", " ").replace("|", " ")
         favcount = item.xpath('div/ins/a[1]/span/span/text()')[0]
         favcount=favcount.replace("Views","")
         foldername =title

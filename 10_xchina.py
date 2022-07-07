@@ -37,7 +37,7 @@ def downloadpic(fname, furl):
             f.write(res.read())
         return furl
     except:      
-        if(RETRYTIME == 2):
+        if(RETRYTIME == 5):
             RETRYTIME = 0
             return "no"
         RETRYTIME += 1
@@ -61,8 +61,8 @@ def getpagehtml(pageurl):
         getpagehtml(pageurl)
 
 alltotalpage = 353
-currentpage = 49
-currentitem = 14
+currentpage = 54
+currentitem = 8
 
 for i in range(currentpage, alltotalpage+1):
     starturl=urltemplate.format(i)   

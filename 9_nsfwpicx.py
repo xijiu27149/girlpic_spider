@@ -46,7 +46,7 @@ def checkfolderexist( title):
 
 totalpage = 305
 currentpage = 81
-currentitem = 7
+currentitem = 8
 
 for i in range(currentpage, totalpage+1):
     starturl=urltemplate.format(i)
@@ -79,6 +79,8 @@ for i in range(currentpage, totalpage+1):
         subresp = requests.get(url=suburl, headers=headers, proxies=proxy)
         subhtml=etree.HTML(subresp.text)
         imgs = subhtml.xpath('//div[@class="entry-content"]/p/a/img')
+        if(len(imgs)==0):
+            imgs = subhtml.xpath('//div[@class="entry-content"]/figure/img')
         imgindex=1
         for img in imgs:
             imgpageurl=img.xpath('@src')[0]

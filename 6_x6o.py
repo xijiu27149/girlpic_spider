@@ -99,8 +99,8 @@ def downloadNofigure(subdic,items):
 
 
 totalpage = 652
-currentpage = 116
-currentitem = 16
+currentpage = 133
+currentitem = 3
 
 pageindex = currentpage  
 
