@@ -1,3 +1,4 @@
+from distutils.file_util import move_file
 from logging import exception
 import shutil
 import requests
@@ -10,6 +11,7 @@ import operator
 from PIL import Image
 import ssl
 import urllib3
+from threading import Thread
 urllib3.disable_warnings()
 
 pardic = "H:\\folder\\x6o"
@@ -29,6 +31,7 @@ headers = {
     "Accept-Encoding": "gzip, deflate, br",
     "Accept":"*/*"}
 proxy = {'http': 'http://127.0.0.1:7890', 'https': 'http://127.0.0.1:7890'}
+session = HTMLSession()
 
 def downloadpicnopro(fname, furl):    
     try: 
@@ -38,6 +41,8 @@ def downloadpicnopro(fname, furl):
             f.write(res.content)
         return 1
     except Exception as e:
+        if(operator.contains(str(e.args[0]), "Max retries exceeded with url")):
+            return 1
         return 0
 
 RETRYTIME=0
@@ -48,16 +53,15 @@ def downloadpic(fname, furl):
         with open(fname, 'wb')as f:
             f.write(res.content)
         return furl
-    except:
+    except Exception as  e:                
         if(downloadpicnopro(fname,furl)==1):
             return furl
         if(RETRYTIME == 2):
             RETRYTIME = 0
             return "no"
         RETRYTIME += 1
-        time.sleep(20)
+        time.sleep(10)
         downloadpic(fname, furl)
-        return furl+"下载失败"
 
 def checkfolderexist(subdic,title):
     dirs=os.listdir(pardic)
@@ -68,14 +72,14 @@ def checkfolderexist(subdic,title):
             return 
 
 
-def downloadNofigure(subdic,items):   
-    foldername = "{}[{}P]".format(title, len(imgitems))
+def downloadNofigure(title,subdic,items):   
+    foldername = "{}[{}P]".format(title, len(items))
     checkfolderexist(subdic, foldername)
     fulldic = picpathtemplate.format(subdic, foldername)
     if(not os.path.exists(fulldic)):
         os.makedirs(fulldic)
     imgindex = 1
-    for imgurl in imgitems:  
+    for imgurl in items:
         imgname = os.path.basename(imgurl)
         imgfullname = "{}{}".format(fulldic, imgname)
         nofullnmae = "{}{}".format(fulldic, "{}{}".format(str(imgindex).rjust(3, '0'), os.path.splitext(imgname)[-1]))
@@ -85,37 +89,54 @@ def downloadNofigure(subdic,items):
         else:
             os.rename(imgfullname, nofullnmae)
         # 转换jpg
-        jpgname = nofullnmae.replace("webp", "jpg")
-        im=Image.open(nofullnmae)
-        im.load()        
-        im.save(jpgname)
-        os.remove(nofullnmae)
-        print("page:{}_{}_{}_【{}/{}】-{}下载完毕".format(pageindex,
-                  subdic, title, imgindex, len(imgitems), nofullnmae))
+        if(os.path.splitext(imgname)[-1] == "webp"):
+            jpgname = nofullnmae.replace("webp", "jpg")
+            im=Image.open(nofullnmae)
+            im.load()        
+            im.save(jpgname)
+            os.remove(nofullnmae)
+        print("page:【{}/{}】_{}_{}_【{}/{}】-{}下载完毕".format(pageindex,totalpage,
+                                                    subdic, title, imgindex, len(items), nofullnmae))
         imgindex += 1
-    print("page:{}_{}_{}下载完毕".format(pageindex, subdic, title))
-    time.sleep(3)
         
+def movefiles(numfolder,olddicname,newdicname,imgcount):
+    oldfoldername = "{}[{}P]".format(olddicname, imgcount)
+    newfoldername = "{}[{}P]".format(newdicname, imgcount)
+    #oldfulldic = picpathtemplate.format(numfolder, oldfoldername)
+    newfulldic = picpathtemplate.format(numfolder, newfoldername)
+    if(not os.path.exists(newfulldic)):
+        os.makedirs(newfulldic)
+    dirs = os.listdir(pardic)
+    for dic in dirs:
+        oldfulldic = picpathtemplate.format(dic, oldfoldername)
+        if(os.path.exists(oldfulldic)):
+            oldfiles=os.listdir(oldfulldic)
+            if(len(oldfiles)>0):
+                for ff in oldfiles:
+                    shutil.move(oldfulldic+ff,newfulldic+ff)
+            #os.remove(oldfulldic)
 
 
-totalpage = 652
-currentpage = 133
-currentitem = 3
+def getpagehtml(pageurl):
+    global RETRYTIME
+    try:
+        page = session.get(pageurl)
+        page.encoding = 'utf-8'        
+        return page.text
+    except:
+        if(RETRYTIME == 3):
+            RETRYTIME = 0
+            return "failed"
+        RETRYTIME += 1
+        print("{}请求超时，20秒后重试第{}次".format(pageurl, RETRYTIME))
+        time.sleep(20)
+        getpagehtml(pageurl)
 
-pageindex = currentpage  
 
-session=HTMLSession()
-while pageindex < totalpage:    
-    print("开始下载第{}页...".format(pageindex))    
-    starturl = url.format(pageindex)
-    page = session.get(starturl)
-    page.encoding='utf-8'        
-    html = etree.HTML(page.text)
-    items = html.xpath('//div[@class="col-md-4 col-sm-6 col-xs-6 ajax-post"]')
-    itemindex=1
+def docrawler(pageindex, items):
     for item in items:
-        if(pageindex == currentpage and itemindex < currentitem):
-            itemindex+=1
+        if(pageindex < currentpage ):
+            itemindex += 1
             continue
         title = item.xpath('article/div[2]/header/h2/a/text()')[0]
         imgurl = item.xpath('article/div[1]/a/@href')[0]
@@ -128,56 +149,79 @@ while pageindex < totalpage:
         else:
             max = math.ceil(int(favcount)/10)*10
             min = max-10
-        subdic = "{}-{}".format(str(min).rjust(5,'0'), str(max).rjust(5,'0'))
-    
+        subdic = "{}-{}".format(str(min).rjust(5, '0'), str(max).rjust(5, '0'))
+
         getVals = list([val for val in title
                         if val.isalpha() or val.isnumeric()])
-        title = "".join(getVals)
-        #if(not operator.contains(title, "大屁股")):
-        #    continue
-        subresp = session.get(imgurl)
-        subresp.encoding='utf-8'
-        subhtml = etree.HTML(subresp.text)
+        oldtitle = "".join(getVals)
+        title = title.replace(
+            "/", "").replace("*", " ").replace(":", " ").replace("|", " ").replace("?", " ")
+
+        subhtmltext = getpagehtml(imgurl)
+        subhtml = etree.HTML(subhtmltext)
         imgitems = subhtml.xpath('//article[@class="single-article"]/figure')
-        if(len(imgitems)==0):
+        movefiles(subdic, oldtitle, title, len(imgitems))
+
+        if(len(imgitems) == 0):
             imgitems = subhtml.xpath('//img[@class="lazy"]/@data-original')
-            downloadNofigure(subdic, items)
+            downloadNofigure(title,subdic, items)
             continue
 
         foldername = "{}[{}P]".format(title, len(imgitems))
-        checkfolderexist(subdic,foldername)
-
+        checkfolderexist(subdic, foldername)
         fulldic = picpathtemplate.format(subdic, foldername)
 
         if(not os.path.exists(fulldic)):
             os.makedirs(fulldic)
-        imgindex=1
+        imgindex = 1
         for img in imgitems:
             imgarray = img.xpath('a/@href')
-            if len(imgarray)>0:
+            if len(imgarray) > 0:
                 imgurl = imgarray[0]
                 imgname = os.path.basename(imgurl)
             else:
-                imgarray=img.xpath('video/@src')
-                if(len(imgarray)==0):
+                imgarray = img.xpath('video/@src')
+                if(len(imgarray) == 0):
                     continue
                 imgurl = "https://www.x6o.com{}".format(imgarray[0])
                 imgname = os.path.basename(imgurl)
             imgfullname = "{}{}".format(fulldic, imgname)
-            nofullnmae = "{}{}".format(fulldic, "{}{}".format(str(imgindex).rjust(3,'0'), os.path.splitext(imgname)[-1]))
+            nofullnmae = "{}{}".format(fulldic, "{}{}".format(
+                str(imgindex).rjust(3, '0'), os.path.splitext(imgname)[-1]))
             if(not os.path.exists(imgfullname)):
                 if(not os.path.exists(nofullnmae)):
                     downloadpic(nofullnmae, imgurl)
             else:
-                os.rename(imgfullname,nofullnmae)
-            print("page:{}【{}/{}】_{}_{}_【{}/{}】-{}下载完毕".format("【{}/652】".format(pageindex), itemindex, len(items),
-                  subdic, title, imgindex, len(imgitems), nofullnmae))
-            imgindex+=1
-        
-        print("page:{}【{}/{}】_{}_{}下载完毕".format(pageindex,itemindex,len(items), subdic, title))
-        itemindex+=1
-        time.sleep(3)
+                os.rename(imgfullname, nofullnmae)
+            print("page:【{}/{}】_{}_{}_【{}/{}】-{}下载完毕".format(pageindex,totalpage, subdic, title, imgindex, len(imgitems), nofullnmae))
+            imgindex += 1
+        print("page:【{}/{}】_{}_{}下载完毕".format(pageindex, totalpage, subdic, title))
 
-    print("page:{}_{}下载完毕".format(pageindex, title))
-    time.sleep(3)
+
+
+totalpage = 652
+currentpage = 83
+currentitem = 1
+
+pageindex = currentpage  
+
+GroupNum=2
+while pageindex < totalpage:    
+    print("开始下载第{}页...".format(pageindex))    
+    starturl = url.format(pageindex)
+    htmltext=getpagehtml(starturl)
+    html = etree.HTML(htmltext)
+    items = html.xpath('//div[@class="col-md-4 col-sm-6 col-xs-6 ajax-post"]')
+    #创建多线程
+    t_list = []
+    for t in range(0, len(items), GroupNum):
+        th = Thread(target=docrawler, args=(
+            pageindex, items[t:t+GroupNum]))
+        t_list.append(th)
+        th.start()
+    for t in t_list:
+        t.join()       
+    print("page:【{}/{}】下载完毕".format(pageindex, totalpage))
     pageindex += 1
+    time.sleep(3)
+print("Done")
