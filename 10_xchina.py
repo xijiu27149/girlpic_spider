@@ -113,12 +113,12 @@ def docrawler(pageindex, items):
                     str(imgindex).rjust(3, '0'), os.path.splitext(imgurl)[-1]))
                 if(not os.path.exists(imgname)):
                     downloadpic(imgname, imgurl)
-                print("page:【{}/{}】_{}_第【{}/{}】页_总【{}/{}】-{}下载完毕".format(pageindex, alltotalpage, 
-                                                                                     title, j, int(totalpage), imgindex, piccount, imgname))
+                print("page:【{}/{}】_第【{}/{}】页_总【{}/{}】-{}下载完毕".format(pageindex, alltotalpage, 
+                                                                                      j, int(totalpage), imgindex, piccount, imgname))
                 imgindex += 1
 
 alltotalpage = 353
-currentpage = 84
+currentpage = 247
 currentitem = 9
 GroupNum=2
 for i in range(currentpage, alltotalpage+1):

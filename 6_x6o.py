@@ -193,14 +193,15 @@ def docrawler(pageindex, items):
                     downloadpic(nofullnmae, imgurl)
             else:
                 os.rename(imgfullname, nofullnmae)
-            print("page:【{}/{}】_{}_{}_【{}/{}】-{}下载完毕".format(pageindex,totalpage, subdic, title, imgindex, len(imgitems), nofullnmae))
+            print("page:【{}/{}】_【{}/{}】_{}_-{}下载完毕".format(pageindex,
+                  totalpage,   imgindex, len(imgitems), subdic, nofullnmae))
             imgindex += 1
         print("page:【{}/{}】_{}_{}下载完毕".format(pageindex, totalpage, subdic, title))
 
 
 
 totalpage = 652
-currentpage = 83
+currentpage = 166
 currentitem = 1
 
 pageindex = currentpage  

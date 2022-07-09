@@ -87,9 +87,9 @@ def getpagehtml(pageurl):
         getpagehtml(pageurl)
 
 
-currentclassindex = 9
-currentsubclasspage = 15
-currentitemindex = 16
+currentclassindex = 14
+currentsubclasspage = 78
+currentitemindex = 9
 
 classpagetext = getpagehtml(urltemplate)
 if(classpagetext == "failed"):

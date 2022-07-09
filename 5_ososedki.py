@@ -67,6 +67,8 @@ def checkfolderexist(classname,subdic, title):
 
 
 def docrawler(pageindex, imgitems):
+    global totalitems
+    global finisheditem
     if(pageindex < currentpage):
         return 
     for item in imgitems:
@@ -122,18 +124,21 @@ def docrawler(pageindex, imgitems):
                     os.remove(imgfullname)
                 else:
                     os.rename(imgfullname, nofullnmae)
-            print("page:{}_{}_{}【{}/{}】-{}下载完毕".format("【{}/4000】".format(pageindex),  classname, title, imgindex, len(imgitems), nofullnmae))
+            print("page:【{}/{}】,items:【{}/{}】,【{}/{}】_{}-{}下载完毕".format(pageindex, totalpage,finisheditem,totalitems,
+                                                         imgindex, len(imgitems), classname, nofullnmae))
             imgindex += 1
-        print("page:{}_{}_{}下载完毕".format(pageindex,
+        finisheditem += 1
+        print("page:【{}/{}】,items:【{}/{}】_{}_{}下载完毕".format(pageindex, totalpage, finisheditem, totalitems,
                classname, title))
         
         
 
 totalpage=4000
 
-currentpage=300
+currentpage=382
 currentitem=10
-
+totalitems = 0
+finisheditem = 0
 pageindex = currentpage
 
 GroupNum=2
@@ -143,6 +148,8 @@ while pageindex<totalpage:
     resp = requests.get(url=starturl, headers=headers, proxies=proxy)
     html = etree.HTML(resp.text)
     items = html.xpath('//div[@class="grid-item"]')
+    totalitems = len(items)
+    finisheditem = 0
     #创建多线程
     t_list = []
     for t in range(0, len(items), GroupNum):

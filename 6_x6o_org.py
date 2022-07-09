@@ -50,7 +50,6 @@ def downloadpic(fname, furl):
             f.write(res.content)
         return furl
     except Exception as e:
-        if(e.)
         if(downloadpicnopro(fname,furl)==1):
             return furl
         if(RETRYTIME == 2):

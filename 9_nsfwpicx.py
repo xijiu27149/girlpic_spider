@@ -112,7 +112,7 @@ def docrawler(pageindex, items):
 
 
 totalpage = 305
-currentpage = 88
+currentpage = 1#251
 currentitem = 2
 GroupNum=2
 for i in range(currentpage, totalpage+1):

@@ -105,25 +105,28 @@ def docrawler(cur_classindex,cur_pageindex,items):
         imgpagehtml = etree.HTML(imgpagehtmltext)
         imgs = imgpagehtml.xpath('//div[@class="my-gallery"]/figure/a/img')
         imgindex = 1
+        filenamelength=3
+        if(len(imgs)>999):
+            filenamelength=4
         for img in imgs:
             imgurl = img.xpath('@src')[0]
             imgname = os.path.basename(imgurl)
             imgname = "{}{}".format(imgfolder, "{}{}".format(
-                str(imgindex).rjust(3, '0'), os.path.splitext(imgurl)[-1]))
+                str(imgindex).rjust(filenamelength, '0'), os.path.splitext(imgurl)[-1]))
             if(not os.path.exists(imgname)):
                 downloadpic(imgname, imgurl)
-            print("class:【{}/{}】{},page:【{}/{}】，{}_总【{}/{}】-{}下载完毕".format(classitemindex, len(classitems), classname, i, totalpage, 
-                                                                                        itemtitle,  imgindex, len(imgs), imgname))
+            print("class:【{}/{}】{},page:【{}/{}】，总【{}/{}】-{}下载完毕".format(classitemindex, len(classitems), classname, i, totalpage, 
+                                                                                          imgindex, len(imgs), imgname))
             imgindex += 1
         if(not os.path.dirname(imgfolder)[-2:] == "P]"):
             newpicfolder = "{}[{}P]".format(
                 os.path.dirname(imgfolder), imgindex-1)
             os.rename(imgfolder, newpicfolder)
 
-currentclassindex=12
-currentsubclasspage=13
+currentclassindex=18
+currentsubclasspage=21
 currentitemindex=16
-N=10
+GroupNum=2
 
 classpagetext=getpagehtml(urltemplate)
 if(classpagetext == "failed"):
@@ -157,14 +160,13 @@ for classitem in classitems:
         items = subclasspagehtml.xpath('//h3[@class="xw0"]')
         #创建多线程
         t_list = []
-        for t in range(1, int(N)+1):
-            t = Thread(target=docrawler, args=(classitemindex, i, items[2*t-2:2*t]))
-            t_list.append(t)
-            t.start()
+        for t in range(0, len(items), GroupNum):
+            th = Thread(target=docrawler, args=(classitemindex,
+            i, items[t:t+GroupNum]))
+            t_list.append(th)
+            th.start()
         for t in t_list:
             t.join()
-
-        time.sleep(3)
             
     classitemindex+=1
 print("Done")
