@@ -68,11 +68,14 @@ def checkfolderexist(subdic,title):
     for dic in dirs:
         checkdic = picpathtemplate.format(dic, title)
         if(os.path.exists(checkdic) and subdic!=dic):
-            shutil.move(checkdic, picpathtemplate.format(subdic, title))
+            shutil.move(
+                checkdic, "H:\\folder\\x6o\\{}\\".format(subdic))
             return 
 
 
-def downloadNofigure(title,subdic,items):   
+def downloadNofigure(title,subdic,items): 
+    global totalitems
+    global finisheditem
     foldername = "{}[{}P]".format(title, len(items))
     checkfolderexist(subdic, foldername)
     fulldic = picpathtemplate.format(subdic, foldername)
@@ -89,15 +92,17 @@ def downloadNofigure(title,subdic,items):
         else:
             os.rename(imgfullname, nofullnmae)
         # 转换jpg
-        if(os.path.splitext(imgname)[-1] == "webp"):
-            jpgname = nofullnmae.replace("webp", "jpg")
-            im=Image.open(nofullnmae)
-            im.load()        
-            im.save(jpgname)
-            os.remove(nofullnmae)
-        print("page:【{}/{}】_{}_{}_【{}/{}】-{}下载完毕".format(pageindex,totalpage,
-                                                    subdic, title, imgindex, len(items), nofullnmae))
+        
+        # if(os.path.splitext(imgname)[-1] == "webp"):
+        #     jpgname = nofullnmae.replace("webp", "jpg")
+        #     im=Image.open(nofullnmae)
+        #     im.load()        
+        #     im.save(jpgname)
+        #     os.remove(nofullnmae)
+        print("page:【{}/{}】,items:【{}/{}】，【{}/{}】-{}下载完毕".format(pageindex, totalpage,finisheditem,totalitems,
+                                                    imgindex, len(items), nofullnmae))
         imgindex += 1
+    finisheditem+=1
         
 def movefiles(numfolder,olddicname,newdicname,imgcount):
     oldfoldername = "{}[{}P]".format(olddicname, imgcount)
@@ -120,6 +125,7 @@ def movefiles(numfolder,olddicname,newdicname,imgcount):
 def getpagehtml(pageurl):
     global RETRYTIME
     try:
+        #page = session.get(pageurl,proxies=proxy)
         page = session.get(pageurl)
         page.encoding = 'utf-8'        
         return page.text
@@ -134,6 +140,8 @@ def getpagehtml(pageurl):
 
 
 def docrawler(pageindex, items):
+    global totalitems
+    global finisheditem
     for item in items:
         if(pageindex < currentpage ):
             itemindex += 1
@@ -155,16 +163,16 @@ def docrawler(pageindex, items):
                         if val.isalpha() or val.isnumeric()])
         oldtitle = "".join(getVals)
         title = title.replace(
-            "/", "").replace("*", " ").replace(":", " ").replace("|", " ").replace("?", " ")
+            "/", "").replace("*", " ").replace(":", " ").replace("|", " ").replace("?", " ").replace("<", " ").replace(">", " ")
 
         subhtmltext = getpagehtml(imgurl)
         subhtml = etree.HTML(subhtmltext)
         imgitems = subhtml.xpath('//article[@class="single-article"]/figure')
-        movefiles(subdic, oldtitle, title, len(imgitems))
+        #movefiles(subdic, oldtitle, title, len(imgitems))
 
         if(len(imgitems) == 0):
             imgitems = subhtml.xpath('//img[@class="lazy"]/@data-original')
-            downloadNofigure(title,subdic, items)
+            downloadNofigure(title, subdic, imgitems)
             continue
 
         foldername = "{}[{}P]".format(title, len(imgitems))
@@ -193,17 +201,20 @@ def docrawler(pageindex, items):
                     downloadpic(nofullnmae, imgurl)
             else:
                 os.rename(imgfullname, nofullnmae)
-            print("page:【{}/{}】_【{}/{}】_{}_-{}下载完毕".format(pageindex,
-                  totalpage,   imgindex, len(imgitems), subdic, nofullnmae))
+            print("page:【{}/{}】,items:【{}/{}】，imgs:【{}/{}】_{}_-{}下载完毕".format(pageindex,
+                  totalpage, finisheditem, totalitems,  imgindex, len(imgitems), subdic, nofullnmae))
             imgindex += 1
-        print("page:【{}/{}】_{}_{}下载完毕".format(pageindex, totalpage, subdic, title))
+        finisheditem += 1
+        print("page:【{}/{}】,items:【{}/{}】_{}_{}下载完毕".format(pageindex,
+              totalpage, finisheditem, totalitems, subdic, title))
 
 
 
 totalpage = 652
-currentpage = 166
+currentpage = 390
 currentitem = 1
-
+totalitems = 0
+finisheditem = 0
 pageindex = currentpage  
 
 GroupNum=2
@@ -213,6 +224,8 @@ while pageindex < totalpage:
     htmltext=getpagehtml(starturl)
     html = etree.HTML(htmltext)
     items = html.xpath('//div[@class="col-md-4 col-sm-6 col-xs-6 ajax-post"]')
+    totalitems=len(items)
+    finisheditem=0
     #创建多线程
     t_list = []
     for t in range(0, len(items), GroupNum):

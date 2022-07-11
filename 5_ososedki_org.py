@@ -52,8 +52,8 @@ def checkfolderexist(classname,subdic, title):
 
 totalpage=4000
 
-currentpage=266
-currentitem=5
+currentpage=280
+currentitem=12
 
 pageindex = currentpage
 

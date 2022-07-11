@@ -1,18 +1,13 @@
-from re import I
-import shutil
 import sys
 from threading import Thread
 from urllib import request
 from lxml import etree
 import os
 import time
-import operator
-import math
 from requests_html import HTMLSession
 import ssl
 import requests
 
-import urllib3
 urltemplate = "https://www.xinggan17.com/forum.php?gid=169"
 #urltemplate="https://xchina.co/photos/kind-2/{}.html" 171页
 headers = {
@@ -115,16 +110,18 @@ def docrawler(cur_classindex,cur_pageindex,items):
                 str(imgindex).rjust(filenamelength, '0'), os.path.splitext(imgurl)[-1]))
             if(not os.path.exists(imgname)):
                 downloadpic(imgname, imgurl)
-            print("class:【{}/{}】{},page:【{}/{}】，总【{}/{}】-{}下载完毕".format(classitemindex, len(classitems), classname, i, totalpage, 
+            print("class:【{}/{}】{},page:【{}/{}】，总【{}/{}】-{}下载完毕".format(classitemindex, len(classitems), classname, cur_pageindex, totalpage,
                                                                                           imgindex, len(imgs), imgname))
             imgindex += 1
         if(not os.path.dirname(imgfolder)[-2:] == "P]"):
             newpicfolder = "{}[{}P]".format(
                 os.path.dirname(imgfolder), imgindex-1)
             os.rename(imgfolder, newpicfolder)
+        print("class:【{}/{}】{},page:【{}/{}】{}下载完毕".format(classitemindex,
+              len(classitems), classname, cur_pageindex, totalpage, itemtitle))
 
-currentclassindex=18
-currentsubclasspage=21
+currentclassindex=30
+currentsubclasspage=2
 currentitemindex=16
 GroupNum=2
 
@@ -139,6 +136,11 @@ for classitem in classitems:
     if(classitemindex<currentclassindex):
         classitemindex+=1
         continue
+    if(classitemindex==31):
+        classitemindex+=1
+        continue
+    if(classitemindex==33):
+        break
     classname = classitem.xpath(
         'div/div[2]/a/text()')[0] + classitem.xpath('div/div[2]/a/em/text()')[0]
     classurl = "https://www.xinggan17.com/"+classitem.xpath('@href')[0]
@@ -148,8 +150,11 @@ for classitem in classitems:
         sys.exit()
     classsubpagehtml=etree.HTML(classsubpagehtmltext)
     totalpage = classsubpagehtml.xpath(
-        '//div[@class="pg"]/label/span/text()')[0]
-    totalpage=totalpage.replace("页","").replace("/","").strip()
+        '//div[@class="pg"]/label/span/text()')
+    if(len(totalpage)==0):
+        totalpage=1
+    else:
+        totalpage=totalpage[0].replace("页","").replace("/","").strip()
     for i in range(1,int(totalpage)+1):
         if(classitemindex == currentclassindex and i < currentsubclasspage):
             continue

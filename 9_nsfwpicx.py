@@ -60,6 +60,8 @@ def getpagehtml(pageurl):
 
 
 def docrawler(pageindex, items):
+    global totalitems
+    global finisheditem
     for item in items:        
         suburl = item.xpath('a/@href')[0]
         daystr = item.xpath('a/span[2]/span/span/text()')
@@ -73,7 +75,7 @@ def docrawler(pageindex, items):
             title = titlearray[0].strip()
             if(len(title) == 0):
                 title = item.xpath('@id')[0].split('-')[1]
-        folder = "【{}】{}".format(daystr, title)
+        folder = "【{}】{}".format(daystr, title)      
         folder = checkfolderexist(folder)
         fulldic = pfolder.format(folder)
         if(not os.path.exists(fulldic)):
@@ -98,29 +100,39 @@ def docrawler(pageindex, items):
                 imgurl = img.xpath('@src')[0]
                 imgurl = imgurl.replace("/th/", "/i/")
             imgname = os.path.basename(imgurl)
+            if(os.path.splitext(imgname)[-1] == ""):
+                imgname+=".jpg"
             fullfilename = "{}{}".format(fulldic, "{}{}".format(
                 str(imgindex).rjust(3, '0'), os.path.splitext(imgname)[-1]))
             if(not os.path.exists(fullfilename)):
                 downloadpic(fullfilename, imgurl)
-            print("page:【{}/{}】_{}_【{}/{}】-{}下载完毕".format(pageindex, totalpage,
-                                                          folder, imgindex, len(imgs), fullfilename))
+            print("page:【{}/{}】,items:【{}/{}】，imgs：【{}/{}】-{}下载完毕".format(pageindex, totalpage, finisheditem, totalitems,
+                                                           imgindex, len(imgs), fullfilename))
             imgindex += 1
         if(not os.path.dirname(fulldic)[-2:] == "P]"):
             newpicfolder = "{}[{}P]".format(
                 os.path.dirname(fulldic), imgindex-1)
             os.rename(fulldic, newpicfolder)
+        finisheditem += 1
+        print("page:【{}/{}】,items:【{}/{}】_{}_下载完毕".format(pageindex,
+              totalpage, finisheditem, totalitems, title))
 
 
-totalpage = 305
-currentpage = 1#251
+totalpage = 310
+currentpage = 265
 currentitem = 2
 GroupNum=2
+
+totalitems = 0
+finisheditem = 0
 for i in range(currentpage, totalpage+1):
     
     starturl=urltemplate.format(i)    
     resphtmltext=getpagehtml(starturl)
     resphtml = etree.HTML(resphtmltext)
     items=resphtml.xpath('//div[@class="featured-content content-area fullwidth-area-blog"]/main/article')
+    totalitems = len(items)
+    finisheditem = 0
     #创建多线程
     t_list = []
     for t in range(0, len(items), GroupNum):

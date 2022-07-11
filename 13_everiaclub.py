@@ -14,15 +14,19 @@ dictemp ="H:\\folder\\everiaclub\\{}\\"
 ppfolder = "H:\\folder\\everiaclub\\"
 
 RETRYTIME = 0
-def downloadpic(fname, furl):
+def downloadpic(fname, furl,proxytag="no"):
     global RETRYTIME
     try:
-        res = requests.get(furl, headers=headers)
-       
+        if(proxytag == "no"):
+            res = requests.get(furl, headers=headers)       
+        else:
+            res = requests.get(furl, headers=headers,proxies=proxy)   
         with open(fname, 'wb')as f:
             f.write(res.content)
         return furl
     except:
+        if(proxytag == "no"):
+            downloadpic(fname, furl, "yes")
         if(RETRYTIME == 2):
             RETRYTIME = 0
             return "failed"
@@ -44,7 +48,7 @@ def checkfolderexist(title):
 def getpagehtml(pageurl):
     global RETRYTIME
     try:
-        resp = requests.get(pageurl, headers=headers)
+        resp = requests.get(pageurl, headers=headers,proxies=proxy)
         return resp.text
     except:
         if(RETRYTIME == 3):
@@ -72,27 +76,38 @@ def docrawler(pageno,items):
         subhtml=etree.HTML(subhtmltext)
         imgindex=1
         imgs = subhtml.xpath('//figure[@class="wp-block-image size-large"]/img')
+        if(len(imgs)==0):
+            imgs = subhtml.xpath('//div[@class="separator"]/a/img')
         for img in imgs:
             imgurl=img.xpath('@src')[0]
             imgname = os.path.basename(imgurl)
             imgname = "{}{}".format(imgfolder, "{}{}".format(
                 str(imgindex).rjust(3, '0'), os.path.splitext(imgurl)[-1]))
+            if(os.path.splitext(imgname)[-1] == ""):
+                imgname+=".jpg"
             if(not os.path.exists(imgname)):
-                downloadpic(imgname, imgurl)
+                downloadpic(imgname, imgurl, "yes")
+                #if(operator.contains(imgurl,"google")):
+                #    downloadpic(imgname, imgurl,"yes")
+                #else:
+                #    downloadpic(imgname, imgurl)
             print("page:【{}/{}】,items:【{}/{}】【{}/{}】-{}下载完毕".format(pageno, totalpage, finisheditem, totalitems,
                                                                         imgindex, len(imgs),  imgname))
             imgindex += 1
-        if(not os.path.dirname(imgfolder)[-2:] == "P]"):
-            newpicfolder = "{}[{}P]".format(
-                os.path.dirname(imgfolder), imgindex-1)
+        #if(not os.path.dirname(imgfolder)[-2:] == "P]"):  
+        tempf = os.path.dirname(imgfolder).split('[')
+        tempf = os.path.dirname(imgfolder).replace(
+            "[{}".format(tempf[len(tempf)-1]), "")
+        newpicfolder = "{}[{}P]".format(tempf, imgindex-1)
+        if(imgfolder!=newpicfolder):
             os.rename(imgfolder, newpicfolder)    
         finisheditem += 1
         print("page:【{}/{}】,items:【{}/{}】_{}_下载完毕".format(pageno,totalpage,finisheditem,totalitems, title))
         
 
-totalpage=504
-pageindex=15
-GroupNum=200
+totalpage=505
+pageindex=196
+GroupNum=2
 totalitems=0
 finisheditem=0
 for i in range(pageindex,totalpage+1):   

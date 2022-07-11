@@ -34,7 +34,6 @@ def downloadpic(fname, furl):
         RETRYTIME += 1
         time.sleep(20)
         downloadpic(fname, furl)
-        return furl+"下载失败"
        
 
 def checkfolderexist( title):    
@@ -71,6 +70,8 @@ def docrawler(pageindex, items):
         suburl = item.xpath('div/ins/a[1]/@href')[0]
         suburl = "https://hitxhot.com{}".format(suburl)
         title = item.xpath('div/a[1]/text()')[0]
+        if(operator.contains(title, '国模') or operator.contains(title, '台模')):
+            continue
         title = title.replace("/", "").replace("*",
                                                " ").replace(":", " ").replace("|", " ").replace("?", " ")
         print("page:{},开始下载:{}".format(pageindex,title))
@@ -106,6 +107,9 @@ def docrawler(pageindex, items):
         if(not str(subpagecount).isdigit()):
             subpagecount = 1
         imgindex = 1
+        filenamelength=3
+        if(8*int(subpagecount)>1000):
+            filenamelength=4
         for j in range(1, int(subpagecount)+1):
             pageurl = "{}?page={}".format(suburl, j)
             pagehtmltext = getpagehtml(pageurl)
@@ -115,7 +119,7 @@ def docrawler(pageindex, items):
                 imgurl = img.xpath('@src')[0]
                 imgname = os.path.basename(imgurl)
                 nofullnmae = "{}{}".format(picfolder, "{}{}".format(
-                    str(imgindex).rjust(3, '0'), os.path.splitext(imgname)[-1]))
+                    str(imgindex).rjust(filenamelength, '0'), os.path.splitext(imgname)[-1]))
                 if(not os.path.exists(nofullnmae)):
                     downloadpic(nofullnmae, imgurl)
                 print("page:【{}/{}】_imgpage:【{}/{}_{}】-{}_{}下载完毕".format(i, totalpage,
@@ -128,8 +132,8 @@ def docrawler(pageindex, items):
             if(not os.path.exists(newpicfolder)):
                 os.rename(picfolder, newpicfolder)
 
-totalpage=381
-currentpage = 112
+totalpage=387
+currentpage = 224
 currentitem = 11
 GroupNum=2
 for i in range(currentpage, totalpage+1):

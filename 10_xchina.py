@@ -9,8 +9,12 @@ import math
 from requests_html import HTMLSession
 import ssl
 from threading import Thread
-urltemplate="https://xchina.co/photos/kind-1/{}.html"
-#urltemplate="https://xchina.co/photos/kind-2/{}.html" 171页
+
+#alltotalpage = 357
+#urltemplate="https://xchina.co/photos/kind-1/{}.html"
+alltotalpage = 2
+#urltemplate="https://xchina.co/photos/series-%E6%8E%A8%E5%A5%B3%E9%83%8E.html" #2页
+urltemplate="https://xchina.co/photos/series-Fantasy%20Factory.html" #2页
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
     "Content-Type": "text/html;charset=UTF-8"}
@@ -22,6 +26,7 @@ httpproxy_handler = request.ProxyHandler(
     },
 )
 proxy = {'http': 'http://127.0.0.1:7890', 'https': 'http://127.0.0.1:7890'}
+
 
 pdictemplate = "H:\\folder\\xchina\\{}\\"
 #pdictemplate="/Users/dujingwei/Movies/folder/xchina/{}/"
@@ -117,8 +122,8 @@ def docrawler(pageindex, items):
                                                                                       j, int(totalpage), imgindex, piccount, imgname))
                 imgindex += 1
 
-alltotalpage = 353
-currentpage = 247
+
+currentpage = 1
 currentitem = 9
 GroupNum=2
 for i in range(currentpage, alltotalpage+1):

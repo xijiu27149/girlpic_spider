@@ -87,9 +87,9 @@ def getpagehtml(pageurl):
         getpagehtml(pageurl)
 
 
-currentclassindex = 14
-currentsubclasspage = 78
-currentitemindex = 9
+currentclassindex = 17
+currentsubclasspage = 10
+currentitemindex =2
 
 classpagetext = getpagehtml(urltemplate)
 if(classpagetext == "failed"):
@@ -99,9 +99,10 @@ classpagehtml = etree.HTML(classpagetext)
 classitems = classpagehtml.xpath('//table[@class="fl_tb"]/tr/a')
 classitemindex = 1
 for classitem in classitems:
-    if(classitemindex < currentclassindex):
+    if(classitemindex < currentclassindex or classitemindex==27 or classitemindex==29) :
         classitemindex += 1
         continue
+    
     classname = classitem.xpath(
         'div/div[2]/a/text()')[0] + classitem.xpath('div/div[2]/a/em/text()')[0]
     classurl = "https://www.xinggan17.com/"+classitem.xpath('@href')[0]
@@ -144,8 +145,8 @@ for classitem in classitems:
                     str(imgindex).rjust(3, '0'), os.path.splitext(imgurl)[-1]))
                 if(not os.path.exists(imgname)):
                     downloadpic(imgname, imgurl)
-                print("class:【{}/{}】{},page:【{}/{}】，item:【{}/{}】_{}_总【{}/{}】-{}下载完毕".format(classitemindex, len(classitems), classname, i, totalpage, itemindex, len(items),
-                                                                                            itemtitle,  imgindex, len(imgs), imgname))
+                print("class:【{}/{}】{},page:【{}/{}】，item:【{}/{}】_总【{}/{}】-{}下载完毕".format(classitemindex, len(classitems), classname, i, totalpage, itemindex, len(items),
+                                                                                              imgindex, len(imgs), imgname))
                 imgindex += 1
             if(not os.path.dirname(imgfolder)[-2:] == "P]"):
                 newpicfolder = "{}[{}P]".format(
