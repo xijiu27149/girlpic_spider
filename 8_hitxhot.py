@@ -64,6 +64,8 @@ def getpagehtml(pageurl):
 
 
 def docrawler(pageindex, items):
+    global totalitems
+    global finisheditem
     for item in items:
         if(pageindex < currentpage):            
             continue
@@ -122,8 +124,8 @@ def docrawler(pageindex, items):
                     str(imgindex).rjust(filenamelength, '0'), os.path.splitext(imgname)[-1]))
                 if(not os.path.exists(nofullnmae)):
                     downloadpic(nofullnmae, imgurl)
-                print("page:【{}/{}】_imgpage:【{}/{}_{}】-{}_{}下载完毕".format(i, totalpage,
-                                                                         j, int(subpagecount), imgindex, subdic, nofullnmae))
+                print("page:【{}/{}】,items:【{}/{}】,imgpage:【{}/{}_{}】-{}下载完毕".format(i, totalpage, finisheditem, totalitems,
+                                                                         j, int(subpagecount), imgindex,  nofullnmae))
                 imgindex +=1
 
         if(not os.path.dirname(picfolder)[-2:] == "P]"):
@@ -131,10 +133,15 @@ def docrawler(pageindex, items):
                 os.path.dirname(picfolder), imgindex-1)
             if(not os.path.exists(newpicfolder)):
                 os.rename(picfolder, newpicfolder)
+        finisheditem += 1
+        print("page:【{}/{}】,items:【{}/{}】_{}_下载完毕".format(pageindex,
+              totalpage, finisheditem, totalitems, title))
 
 totalpage=387
-currentpage = 224
+currentpage = 342
 currentitem = 11
+totalitems = 0
+finisheditem = 0
 GroupNum=2
 for i in range(currentpage, totalpage+1):
     if(i<currentpage):
@@ -144,6 +151,8 @@ for i in range(currentpage, totalpage+1):
     html = etree.HTML(htmltext)
     items = html.xpath(
         '//div[@class="thumb-view post blish andard has-post-thumbnail hentry asian"]')
+    totalitems = len(items)
+    finisheditem = 0
     #创建多线程
     t_list = []
     for t in range(0, len(items), GroupNum):

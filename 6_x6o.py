@@ -99,7 +99,7 @@ def downloadNofigure(title,subdic,items):
         #     im.load()        
         #     im.save(jpgname)
         #     os.remove(nofullnmae)
-        print("page:【{}/{}】,items:【{}/{}】，【{}/{}】-{}下载完毕".format(pageindex, totalpage,finisheditem,totalitems,
+        print("page:【{}/{}】,items:【{}/{}】,【{}/{}】-{}下载完毕".format(pageindex, totalpage,finisheditem,totalitems,
                                                     imgindex, len(items), nofullnmae))
         imgindex += 1
     finisheditem+=1
@@ -211,14 +211,14 @@ def docrawler(pageindex, items):
 
 
 totalpage = 652
-currentpage = 390
+currentpage = 1
 currentitem = 1
 totalitems = 0
 finisheditem = 0
 pageindex = currentpage  
 
 GroupNum=2
-while pageindex < totalpage:    
+while pageindex < totalpage+1:    
     print("开始下载第{}页...".format(pageindex))    
     starturl = url.format(pageindex)
     htmltext=getpagehtml(starturl)
