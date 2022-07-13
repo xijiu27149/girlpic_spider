@@ -1,4 +1,5 @@
 from ast import operator
+from numpy import tile
 import requests
 import time
 import os
@@ -45,10 +46,13 @@ def checkfolderexist(title):
     return title
 
 
-def getpagehtml(pageurl):
+def getpagehtml(pageurl,protype=0):
     global RETRYTIME
     try:
-        resp = requests.get(pageurl, headers=headers,proxies=proxy)
+        if(protype==0):
+            resp = requests.get(pageurl, headers=headers,proxies=proxy)
+        else:
+            resp = requests.get(pageurl, headers=headers)
         return resp.text
     except:
         if(RETRYTIME == 3):
@@ -59,25 +63,39 @@ def getpagehtml(pageurl):
         time.sleep(20)
         getpagehtml(pageurl)
 
+def getImgs(type,imgpageurl):    
+    subhtmltext = getpagehtml(imgpageurl,type)
+    htmldata = etree.HTML(subhtmltext)
+    imgs = htmldata.xpath('//figure[@class="wp-block-image size-large"]/img')
+    if(len(imgs) == 0):
+        imgs = htmldata.xpath('//figure[@class="wp-block-image"]/img')
+    if(len(imgs) ==0):
+        imgs = htmldata.xpath(
+            '//figure[@class="wp-block-image size-full"]/img')
+    if(len(imgs) ==0):
+        imgs = htmldata.xpath('//div[@class="separator"]/a/img')
+    return imgs
+
 def docrawler(pageno,items):
     global totalitems
     global finisheditem
     for item in items:
-        title=item.xpath('h2/a/text()')[0]
+        title=item.xpath('h2/a/text()')[0]        
         title = title.replace("[", "【").replace("]", "】").replace(
             "/", " ").replace("?", "").replace("*", " ").replace(":", " ").replace("|", " ").strip()
         title=checkfolderexist(title)
-        print("page:【{}/{}】开始下载：{}".format(pageno,totalpage,title))      
+        #if(not operator.contains(title, "香月杏珠")):
+        #    continue
+        print("page:【{}/{}】开始下载：{}".format(pageno,totalpage,title))  
         imgfolder=dictemp.format(title)
         if(not os.path.exists(imgfolder)):
             os.makedirs(imgfolder)
         suburl=item.xpath('div/a/@href')[0]
-        subhtmltext=getpagehtml(suburl)
-        subhtml=etree.HTML(subhtmltext)
-        imgindex=1
-        imgs = subhtml.xpath('//figure[@class="wp-block-image size-large"]/img')
+         
+        imgs =getImgs(0,suburl)
         if(len(imgs)==0):
-            imgs = subhtml.xpath('//div[@class="separator"]/a/img')
+            imgs = getImgs(1, suburl)
+        imgindex = 1
         for img in imgs:
             imgurl=img.xpath('@src')[0]
             imgname = os.path.basename(imgurl)
@@ -106,7 +124,7 @@ def docrawler(pageno,items):
         
 
 totalpage=506
-pageindex=1 #466
+pageindex=92#483
 GroupNum=2
 totalitems=0
 finisheditem=0

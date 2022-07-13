@@ -22,6 +22,11 @@ headers = {
     "Content-Type":"text/html;charset=UTF-8"}
 proxy = {'http': 'http://127.0.0.1:7890', 'https': 'http://127.0.0.1:7890'}
 
+class ImgNameUrl:
+    def __init__(self, ImgFileName, ImgDownLoadUrl):
+        self.ImgFileName=ImgFileName
+        self.ImgDownLoadUrl=ImgDownLoadUrl
+
 RETRYTIME=0
 def downloadpic(fname, furl):
     global RETRYTIME
@@ -135,7 +140,7 @@ def docrawler(pageindex, imgitems):
 
 totalpage=4000
 
-currentpage=633
+currentpage=663
 currentitem=10
 totalitems = 0
 finisheditem = 0

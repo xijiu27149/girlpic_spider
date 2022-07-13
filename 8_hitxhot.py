@@ -138,7 +138,7 @@ def docrawler(pageindex, items):
               totalpage, finisheditem, totalitems, title))
 
 totalpage=387
-currentpage = 342
+currentpage = 363
 currentitem = 11
 totalitems = 0
 finisheditem = 0
