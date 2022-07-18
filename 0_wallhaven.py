@@ -1,4 +1,3 @@
-from asyncio import futures
 import os
 import requests
 import time
