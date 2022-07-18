@@ -17,7 +17,7 @@
 
 3. [3_poco.py](https://github.com/xijiu27149/beautypiccrawler/blob/main/3_poco.py)
 
-   网站：[颇可网](https://www.poco.cn/)，质量一般吧，试着爬了两个摄影师的作品[谭钰桐YuTong的个人空间_颇可网 (poco.cn)](https://www.poco.cn/user/id65856082)和[Ray Shen的个人空间_颇可网 (poco.cn)](http://rayshen.poco.cn/?page=1&type=works&tt=Ray Shen的个人空间_颇可网)，也是用Web Scraper爬地址后下载的。
+   网站：[颇可网](https://www.poco.cn/)，质量一般吧，试着爬了两个摄影师的作品[谭钰桐YuTong的个人空间_颇可网 ](https://www.poco.cn/user/id65856082)和[Ray Shen的个人空间_颇可网](http://rayshen.poco.cn) Shen的个人空间_颇可网)，也是用Web Scraper爬地址后下载的。
 
    下载文件：2.6GB，1600
 
