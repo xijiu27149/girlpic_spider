@@ -10,11 +10,11 @@ from requests_html import HTMLSession
 import ssl
 from threading import Thread
 
-#alltotalpage = 357
+alltotalpage = 1
 #urltemplate="https://xchina.co/photos/kind-1/{}.html"
-alltotalpage = 2
+urltemplate = "https://xchina.co/photos/keyword-%E5%B8%8C%E5%A8%81%E7%A4%BE.html"
 #urltemplate="https://xchina.co/photos/series-%E6%8E%A8%E5%A5%B3%E9%83%8E.html" #2页
-urltemplate="https://xchina.co/photos/series-Fantasy%20Factory.html" #2页
+#urltemplate="https://xchina.co/photos/series-Fantasy%20Factory.html" #2页
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
     "Content-Type": "text/html;charset=UTF-8"}
@@ -129,7 +129,8 @@ GroupNum=2
 for i in range(currentpage, alltotalpage+1):
     if(i<currentpage):
         continue
-    starturl=urltemplate.format(i)   
+    #starturl=urltemplate.format(i)   
+    starturl = urltemplate
     resphtmltext = getpagehtml(starturl)
     if(resphtmltext == "failed"):
         print("请求超时")

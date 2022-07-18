@@ -124,8 +124,8 @@ def docrawler(pageindex, items):
                     str(imgindex).rjust(filenamelength, '0'), os.path.splitext(imgname)[-1]))
                 if(not os.path.exists(nofullnmae)):
                     downloadpic(nofullnmae, imgurl)
-                print("page:【{}/{}】,items:【{}/{}】,imgpage:【{}/{}_{}】-{}下载完毕".format(i, totalpage, finisheditem, totalitems,
-                                                                         j, int(subpagecount), imgindex,  nofullnmae))
+                print("page:【{}/{}】,items:【{}/{}】,imgpage:【{}/{}_{}】-【{}】{}下载完毕".format(i, totalpage, finisheditem, totalitems,
+                                                                                        j, int(subpagecount), imgindex, suburl, nofullnmae))
                 imgindex +=1
 
         if(not os.path.dirname(picfolder)[-2:] == "P]"):
@@ -137,12 +137,12 @@ def docrawler(pageindex, items):
         print("page:【{}/{}】,items:【{}/{}】_{}_下载完毕".format(pageindex,
               totalpage, finisheditem, totalitems, title))
 
-totalpage=387
-currentpage = 363
+totalpage=393
+currentpage = 387
 currentitem = 11
 totalitems = 0
 finisheditem = 0
-GroupNum=2
+GroupNum=1
 for i in range(currentpage, totalpage+1):
     if(i<currentpage):
         continue

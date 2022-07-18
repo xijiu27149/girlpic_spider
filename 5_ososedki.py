@@ -1,3 +1,4 @@
+import sys
 import shutil
 import requests
 from lxml import etree
@@ -110,7 +111,7 @@ def docrawler(pageindex, imgitems):
         detailpage = suburl.format(imgurl)
         subresp = requests.get(url=detailpage, headers=headers, proxies=proxy)
         subhtml = etree.HTML(subresp.text)
-        imgitems = subhtml.xpath('//div[@class="grid-item"]')
+        imgitems = subhtml.xpath('//div[@class="grid-item"]')      
         imgindex = 1
         for img in imgitems:
             temp = img.xpath('a[@data-fancybox="gallery"]')
@@ -129,24 +130,26 @@ def docrawler(pageindex, imgitems):
                     os.remove(imgfullname)
                 else:
                     os.rename(imgfullname, nofullnmae)
-            print("page:【{}/{}】,items:【{}/{}】,【{}/{}】_{}-{}下载完毕".format(pageindex, totalpage,finisheditem,totalitems,
-                                                         imgindex, len(imgitems), classname, nofullnmae))
+            print("page:【{}/{}】,items:【{}/{}】,【{}/{}】_{}【{}】-{}下载完毕".format(pageindex, totalpage, finisheditem, totalitems,
+                                                                        imgindex, len(imgitems), classname, detailpage, nofullnmae))
             imgindex += 1
         finisheditem += 1
         print("page:【{}/{}】,items:【{}/{}】_{}_{}下载完毕".format(pageindex, totalpage, finisheditem, totalitems,
                classname, title))
         
         
-
-totalpage=4000
-
-currentpage=663
+#totalpage=4000
+#1337
+totalpage = 1300
+currentpage = 1257
+if(len(sys.argv)>0):
+    currentpage=int(sys.argv[1])
 currentitem=10
 totalitems = 0
 finisheditem = 0
 pageindex = currentpage
 
-GroupNum=2
+GroupNum=1
 while pageindex<totalpage:
     print("开始下载第{}页...".format(pageindex))
     starturl = url.format(pageindex)

@@ -123,8 +123,8 @@ def docrawler(pageno,items):
         print("page:【{}/{}】,items:【{}/{}】_{}_下载完毕".format(pageno,totalpage,finisheditem,totalitems, title))
         
 
-totalpage=506
-pageindex=92#483
+totalpage=508
+pageindex=507
 GroupNum=2
 totalitems=0
 finisheditem=0
