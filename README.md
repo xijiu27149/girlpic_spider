@@ -9,8 +9,6 @@
 
    下载文件：513GB，40万+
 
-   图片总量：
-
 2. [1_wallhaven mthread.py](https://github.com/xijiu27149/beautypiccrawler/blob/main/1_wallhaven%20mthread.py)
 
    这个用的文件分块多线程下载，其实壁纸文件不大，这里多线程意义不大。
@@ -77,7 +75,7 @@
 
 15. [10_xchina.py](https://github.com/xijiu27149/beautypiccrawler/blob/main/10_xchina.py)
 
-    网站：https://xchina.co/，图片板块，主要是国内各个平台的模特写真，需要科学上网
+    网站：[小黄书 (xchina.co)](https://xchina.co/)，图片板块，主要是国内各个平台的模特写真，需要科学上网
 
     下载文件：130GB，40w
 
@@ -87,7 +85,7 @@
 
 17. [11_kanxiaojj.py](https://github.com/xijiu27149/beautypiccrawler/blob/main/11_kanxiaojj.py)
 
-    网站：[看小姐姐 – 一个专门看小姐姐的网站 (kanxiaojiejie.com)](https://www.kanxiaojiejie.com/)，SFW，图片不多，每组一般都是一张图，不需要科学上网
+    网站：[看小姐姐 – 一个专门看小姐姐的网站 ](https://www.kanxiaojiejie.com/)，SFW，图片不多，每组一般都是一张图，不需要科学上网
 
     下载文件：584MB，3400
 
