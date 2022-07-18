@@ -5,7 +5,7 @@
 
 1. [0_wallhaven.py](https://github.com/xijiu27149/beautypiccrawler/blob/main/0_wallhaven.py)
 
-   网站：https://wallhaven.cc/，超级好的壁纸网站，壁纸质量高，各种风格都有，注册后还有个NSFW分类🤤。嫌python模拟登录麻烦，就用的Web Scraper爬地址+Python下载的方式，这个文件是简单的单线程下载。
+   网站：[[Awesome Wallpapers - wallhaven.cc](https://wallhaven.cc)，超级好的壁纸网站，壁纸质量高，各种风格都有，注册后还有个NSFW分类🤤。嫌python模拟登录麻烦，就用的Web Scraper爬地址+Python下载的方式，这个文件是简单的单线程下载。
 
    下载文件：513GB，40万+
 
@@ -17,17 +17,17 @@
 
 3. [3_poco.py](https://github.com/xijiu27149/beautypiccrawler/blob/main/3_poco.py)
 
-   网站：https://www.poco.cn/，质量一般吧，试着爬了两个摄影师的作品[谭钰桐YuTong的个人空间_颇可网 (poco.cn)](https://www.poco.cn/user/id65856082)和[Ray Shen的个人空间_颇可网 (poco.cn)](http://rayshen.poco.cn/?page=1&type=works&tt=Ray Shen的个人空间_颇可网)，也是用Web Scraper爬地址后下载的。
+   网站：[颇可网](https://www.poco.cn/)，质量一般吧，试着爬了两个摄影师的作品[谭钰桐YuTong的个人空间_颇可网 (poco.cn)](https://www.poco.cn/user/id65856082)和[Ray Shen的个人空间_颇可网 (poco.cn)](http://rayshen.poco.cn/?page=1&type=works&tt=Ray Shen的个人空间_颇可网)，也是用Web Scraper爬地址后下载的。
 
    下载文件：2.6GB，1600
 
 4. [4_rayshen.py](https://github.com/xijiu27149/beautypiccrawler/blob/main/4_rayshen.py)
 
-   网站：https://www.poco.cn/，python代码爬的摄影师Ray Shen的较新的作品。
+   网站：[颇可网](https://www.poco.cn/)，python代码爬的摄影师Ray Shen的较新的作品。
 
 5. [5_ososedki.py](https://github.com/xijiu27149/beautypiccrawler/blob/main/5_ososedki.py)
 
-   网站：https://ososedki.com/，完全的NSFW网站，也有普通尺度的，图片量很大国内国外各种风格都有，有将近4000页，而且一直在更新，图片质量层次不齐。不需要科学上网，但速度慢而且有些图片不行，建议科学上网。python多线程下载，目前按top排序爬到1300页停下了，硬盘不够了。。
+   网站：[ososedki](https://ososedki.com/)，完全的NSFW网站，也有普通尺度的，图片量很大国内国外各种风格都有，有将近4000页，而且一直在更新，图片质量层次不齐。不需要科学上网，但速度慢而且有些图片不行，建议科学上网。python多线程下载，目前按top排序爬到1300页停下了，硬盘不够了。。
 
    下载文件：532GB，120w
 
@@ -41,7 +41,7 @@
 
 8. [6_x6o.py](https://github.com/xijiu27149/beautypiccrawler/blob/main/6_x6o.py)
 
-   网站：数据猎人图片分区 https://www.x6o.com/，套图质量很高，大部分是nsfw，总共600多页，但有很多图片图床失效。现在不知道为什么网站似乎关闭了，不过幸好我都爬完了。访问网站不需要科学上网，但图片在墙外，想看或下载需要科学上网。
+   网站：[数据猎人图片分区](https://www.x6o.com/)，套图质量很高，大部分是nsfw，总共600多页，但有很多图片图床失效。现在不知道为什么网站似乎关闭了，不过幸好我都爬完了。访问网站不需要科学上网，但图片在墙外，想看或下载需要科学上网。
 
    下载文件：239GB，48W
 
