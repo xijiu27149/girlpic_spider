@@ -5,7 +5,7 @@
 
 1. [0_wallhaven.py](https://github.com/xijiu27149/beautypiccrawler/blob/main/0_wallhaven.py)
 
-   网站：[[Awesome Wallpapers - wallhaven.cc](https://wallhaven.cc)，超级好的壁纸网站，壁纸质量高，各种风格都有，注册后还有个NSFW分类🤤。嫌python模拟登录麻烦，就用的Web Scraper爬地址+Python下载的方式，这个文件是简单的单线程下载。
+   网站：[Awesome Wallpapers - wallhaven.cc](https://wallhaven.cc)，超级好的壁纸网站，壁纸质量高，各种风格都有，注册后还有个NSFW分类🤤。嫌python模拟登录麻烦，就用的Web Scraper爬地址+Python下载的方式，这个文件是简单的单线程下载。
 
    下载文件：513GB，40万+
 
