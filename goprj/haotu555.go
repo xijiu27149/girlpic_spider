@@ -20,7 +20,9 @@ func main() {
 	cur_class, _ := strconv.Atoi(os.Args[1])
 	cur_page, _ := strconv.Atoi(os.Args[2])
 	cur_item, _ := strconv.Atoi(os.Args[3])
-	cur_subpage, _ := strconv.Atoi(os.Args[4])
+	//cur_class := 6
+	//cur_page := 7
+	//cur_item := 7
 	doc, err := htmlquery.LoadURL(starturl)
 	if err != nil {
 		panic(err)
@@ -82,17 +84,18 @@ func main() {
 					panic(err)
 				}
 				pagesizenode := htmlquery.FindOne(imgpagedoc, "//div[@class='nav-links']/a[1]")
-				pagesizestext := htmlquery.InnerText(pagesizenode)
-				compileregex := regexp.MustCompile("共(.*?)页")
-				matchArr := compileregex.FindStringSubmatch(pagesizestext)
-				pagesizestr := matchArr[len(matchArr)-1]
-				pagesize, _ := strconv.ParseInt(pagesizestr, 0, 64)
-				pagesizeInt32 := int(pagesize)
+				pagesizeInt32 := 1
+				if pagesizenode != nil {
+					pagesizestext := htmlquery.InnerText(pagesizenode)
+					compileregex := regexp.MustCompile("共(.*?)页")
+					matchArr := compileregex.FindStringSubmatch(pagesizestext)
+					pagesizestr := matchArr[len(matchArr)-1]
+					pagesize, _ := strconv.ParseInt(pagesizestr, 0, 64)
+					pagesizeInt32 = int(pagesize)
+				}
+
 				imgindex := 1
 				for k := 1; k <= pagesizeInt32; k++ {
-					if i+1 == cur_class && p == cur_page && j+1 == cur_item && k < cur_subpage {
-						continue
-					}
 					pageurl := imgpageurl
 					if k > 1 {
 						pageurl = strings.Replace(imgpageurl, ".html", fmt.Sprintf("_%d.html", k), 1)
