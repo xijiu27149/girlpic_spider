@@ -98,9 +98,11 @@ def docrawler(pageno,items):
                 imgname = os.path.basename(imgurl)
                 imgname = "{}{}".format(imgfolder, "{}{}".format(
                 str(imgindex).rjust(3, '0'), os.path.splitext(imgurl)[-1]))
+                if(os.path.splitext(imgname)[-1] == ""):
+                    imgname+=".jpg"
                 if(not os.path.exists(imgname)):
                     downloadpic(imgname, imgurl)     
-                print("page:【{}/{}】,items:【{}/{},subpage:【{}/{}】,imgs:【{}/{}】-{}下载完毕".format(pageno, totalpage, finisheditem, totalitems,k,maxpage,
+                print("page:【{}/{}】,items:【{}/{}】,subpage:【{}/{}】,imgs:【{}/{}】-{}下载完毕".format(pageno, totalpage, finisheditem, totalitems,k,maxpage,
                                                                         imgindex, imgcount,  imgname))
                 imgindex += 1
         #if(not os.path.dirname(imgfolder)[-2:] == "P]"):  
@@ -115,7 +117,7 @@ def docrawler(pageno,items):
         
 
 totalpage=1639
-pageindex=1
+pageindex=101
 GroupNum=2
 totalitems=0
 finisheditem=0

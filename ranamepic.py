@@ -1,7 +1,7 @@
 import os
 import shutil
 def removeemptyfolder():
-   dicname="H:\\folder\\everiaclub\\"
+   dicname="H:\\folder\\hotgirl\\"
    subdics=os.listdir(dicname)
    for subdic in subdics:
       temp=dicname+subdic
@@ -10,12 +10,14 @@ def removeemptyfolder():
          shutil.rmtree(temp)
          print(temp+"已删除")
 def addjpg():
-   dicname = "H:\\folder\\everiaclub\\"
-   filename = "H:\\folder\\everiaclub\\{}\\{}"
+   dicname = "/Users/dujingwei/Temp/folder/hotgirl/"
+   filename = "/Users/dujingwei/Temp/folder/hotgirl/{}/{}"
    subdics=os.listdir(dicname)
    for subdic in subdics:
       temp = dicname+subdic
-      files = os.listdir(temp)
+      if(subdic==".DS_Store"):
+             continue
+      files = os.listdir(temp)      
       for file in files:
          if(os.path.splitext(file)[-1]==""):
             oldfile = filename.format(subdic, file)
