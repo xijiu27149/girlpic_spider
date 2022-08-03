@@ -1,4 +1,4 @@
-# beautypiccrawler
+# **[girlpic_spider](https://github.com/xijiu27149/girlpic_spider)**
 学习爬虫的练习，嗯从爬美女图片开始。
 
 其实是收藏癖作怪，下载了并不想看。。现在下载了将近400万张图，准备找时间学学机器学习啥的，比如训练程序，让它知道我喜欢什么样的图，自动给图片打分什么的，加油吧，图片里有很多不好看的，慢慢学习让程序给我挑出来。
@@ -40,6 +40,8 @@
 8. [6_x6o.py](https://github.com/xijiu27149/beautypiccrawler/blob/main/6_x6o.py)
 
    网站：[数据猎人图片分区](https://www.x6o.com/)，套图质量很高，大部分是nsfw，总共600多页，但有很多图片图床失效。现在不知道为什么网站似乎关闭了，不过幸好我都爬完了。访问网站不需要科学上网，但图片在墙外，想看或下载需要科学上网。
+
+   更新：网站已经改版重新上线了，资源少了些，但还在持续更新，而且质量依然很高。这个爬虫代码不能直接用了，有空我再更新下，好消息是网站访问不需要科学上网了，即使是NSFW图片，站长厉害。
 
    下载文件：239GB，48W
 
@@ -105,11 +107,39 @@
 
     下载文件：239GB，81w+
 
-21. [copyfile.py](https://github.com/xijiu27149/beautypiccrawler/blob/main/copyfile.py)
+21. [14_tuiimg.py](https://github.com/xijiu27149/girlpic_spider/blob/main/14_tuiimg.py)
+
+    网站：[美女图片 - 推图网 (tuiimg.com)](https://www.tuiimg.com/meinv/)，多类型图库网美女图片分区，SFW，无需科学上网，目前有130页。
+
+    下载文件：21GB，11W+
+
+22. [15_hotgirl.py](https://github.com/xijiu27149/girlpic_spider/blob/main/15_hotgirl.py)
+
+    网站：[Asian sexy girl - Share sexy asian girl photos, videos and erotic girl livestream (hotgirl.asia)](https://hotgirl.asia/)，亚洲套图，NSFW，量很大，大概1700页，需要科学上网。
+
+    下载文件：317GB，84W+，目前下载了三分之一左右，暂时停下了，硬盘满了，清理下重复文件后再继续
+
+23. [16_umei.py](https://github.com/xijiu27149/girlpic_spider/blob/main/16_umei.py)
+
+    网站：[【美女图片】美女图片大全_美女图片库_美女图片 高清大全 - 优美图库 (umei.cc)](https://www.umei.cc/meinvtupian/)，多类型图库网美女图片分区，SFW，有9个大类，每一类几十页到几百页不等，无需科学上网。
+
+    下载文件：61GB，18W+
+
+24. [haotu555.go](https://github.com/xijiu27149/girlpic_spider/blob/main/goprj/haotu555.go)
+
+    网站：[美女标签 - 套图分类，美女套图，美女套图网haotu555.com](https://www.haotu555.net/htm/98/)，国内套图，SFW，有几十个分类，总共4万多套，无需科学上网。尝试学习用go写爬虫。
+
+    下载文件：462GB，180W+
+
+25. [haotu555_mth.go](https://github.com/xijiu27149/girlpic_spider/blob/main/goprj/haotu_mth/haotu555_mth.go)
+
+    多线程版
+
+26. [copyfile.py](https://github.com/xijiu27149/beautypiccrawler/blob/main/copyfile.py)
 
     有时一套图出错的很多，下载的都是不到1KB的小文件，或是图太丑，但程序又没法直接跳过，就做了个简单的GUI工具，按数量复制最大编号的文件，程序下载时发现图片存在就会跳过，这样就跳过了这一套图。
 
-22. [multidownload.py](https://github.com/xijiu27149/beautypiccrawler/blob/main/multidownload.py)
+27. [multidownload.py](https://github.com/xijiu27149/beautypiccrawler/blob/main/multidownload.py)
 
     多线程下载的逻辑是每两套图一个线程处理，但ososedki网有很多图图有上千张，其他线程很快完事，只剩最后这一两个在慢慢下，批量下图的功能没搞懂，集成进来总不成，就临时搞了个工具，手动批量下载大数量的套图。
 
