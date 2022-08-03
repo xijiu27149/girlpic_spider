@@ -4,24 +4,37 @@ import os
 from lxml import etree
 from threading import Thread
 import operator
+from urllib import request
+import sys
+
 urltemplate="https://hotgirl.asia/photos/page/{}/"
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
-    "Content-Type": "text/html;charset=UTF-8"}
+    "Content-Type": "text/html;charset=UTF-8",
+    "cookie": "disqus_unique=s1p9h51ht375u; __jid=8djoiru2vfduq9"}
 proxy = {'http': 'http://127.0.0.1:7890', 'https': 'http://127.0.0.1:7890'}
-
-ppfolder="/Users/dujingwei/Temp/folder/hotgirl/"
-dictemp="/Users/dujingwei/Temp/folder/hotgirl/{}/"
+httpproxy_handler = request.ProxyHandler(
+    {
+        "http": "http://127.0.0.1:7890",
+        "https": "http://127.0.0.1:7890"
+    },
+)
+openner = request.build_opener(httpproxy_handler)
+#ppfolder="/Users/dujingwei/Temp/folder/hotgirl/"
+#dictemp="/Users/dujingwei/Temp/folder/hotgirl/{}/"
+ppfolder = "H:\\folder\\hotgirl\\"
+dictemp = "H:\\folder\\hotgirl\\{}\\"
 
 RETRYTIME = 0
 def downloadpic(fname, furl):
     global RETRYTIME
     try:
-        res = requests.get(furl, headers=headers,proxies=proxy)  
+        req = request.Request(furl, headers=headers)
+        res = openner.open(req)
         with open(fname, 'wb')as f:
-            f.write(res.content)
+            f.write(res.read())
         return furl
-    except:        
+    except Exception as e:        
         if(RETRYTIME == 2):
             RETRYTIME = 0
             return "failed"
@@ -54,28 +67,15 @@ def getpagehtml(pageurl,protype=0):
         time.sleep(20)
         getpagehtml(pageurl)
 
-def getImgs(type,imgpageurl):    
-    subhtmltext = getpagehtml(imgpageurl,type)
-    htmldata = etree.HTML(subhtmltext)
-    imgs = htmldata.xpath('//figure[@class="wp-block-image size-large"]/img')
-    if(len(imgs) == 0):
-        imgs = htmldata.xpath('//figure[@class="wp-block-image"]/img')
-    if(len(imgs) ==0):
-        imgs = htmldata.xpath(
-            '//figure[@class="wp-block-image size-full"]/img')
-    if(len(imgs) ==0):
-        imgs = htmldata.xpath('//div[@class="separator"]/a/img')
-    return imgs
-
 def docrawler(pageno,items):
     global totalitems
     global finisheditem
     for item in items:
         title=item.xpath('div/div[1]/text()')[0]        
         title = title.replace("[", "【").replace("]", "】").replace(
-            "/", " ").replace("?", "").replace("*", " ").replace(":", " ").replace("|", " ").strip()
+            "/", " ").replace("?", "").replace("*", " ").replace(":", " ").replace("|", " ").replace('\n','').strip()
         title=checkfolderexist(title)
-        #if(not operator.contains(title, "香月杏珠")):
+        #if(not operator.contains(title, "The Ultimate Black Silk Legs Series")):
         #    continue
         print("page:【{}/{}】开始下载：{}".format(pageno,totalpage,title))  
         imgfolder=dictemp.format(title)
@@ -117,7 +117,7 @@ def docrawler(pageno,items):
         
 
 totalpage=1639
-pageindex=101
+pageindex=int(sys.argv[1]) #301 #506
 GroupNum=2
 totalitems=0
 finisheditem=0

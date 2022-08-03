@@ -1,4 +1,5 @@
 
+import sys
 from threading import Thread
 from numpy import empty
 import requests
@@ -14,7 +15,7 @@ headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
     "Content-Type": "text/html;charset=UTF-8"}
 RETRYTIME=0
-def checkfolderexist(classname,title):
+def checkfolderexist(classname,title):   
     dirs = os.listdir(ppfolder.format(classname))
     for dir in dirs:
         temp = dir.split('[')
@@ -37,6 +38,7 @@ def getpagehtml(pageurl):
     global RETRYTIME
     try:
        resp = requests.get(pageurl, headers=headers)  
+       
        resp.encoding="utf-8"          
        return resp.text
     except:
@@ -112,8 +114,8 @@ def docrawler(classname,classindex,totalclass,pageno,items):
         
 if(__name__=="__main__"):
     totalpage=129
-    classindex=1
-    pageindex=260
+    classindex = int(sys.argv[1])  # 3
+    pageindex = int(sys.argv[2])  # 1
     GroupNum=1
     totalitems=0
     finisheditem=0
@@ -121,9 +123,11 @@ if(__name__=="__main__"):
     homepagehtml=etree.HTML(homepagehtmltext)
     classnames=homepagehtml.xpath('//div[@class="pic-box"]')
     for i in range(0,len(classnames)):
-        if(i+1<classindex):
-            classindex+=1
+        if(i+1<classindex):           
+            continue
         classname=classnames[i].xpath('h1/text()')[0]
+        if(not os.path.exists(ppfolder.format(classname))):
+            os.makedirs(ppfolder.format(classname))
         classurl=classnames[i].xpath('h1/small/a/@href')[0]
         classurl = "https://www.umei.cc"+classurl
         classpagehtmltext=getpagehtml(classurl)        
