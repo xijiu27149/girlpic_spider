@@ -12,3 +12,4 @@ goprj/test.go
 goprj/test.go
 /__pycache__
 /.vscode
+/goprj/.idea
