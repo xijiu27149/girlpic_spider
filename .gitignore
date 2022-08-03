@@ -13,3 +13,5 @@ goprj/test.go
 /__pycache__
 /.vscode
 /goprj/.idea
+/goprj/test.go
+/goprj/go.sum
