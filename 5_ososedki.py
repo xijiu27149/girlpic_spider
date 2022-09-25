@@ -140,8 +140,8 @@ def docrawler(pageindex, imgitems):
         
 #totalpage=4000
 #1337
-totalpage = 1300
-currentpage = 1257
+totalpage = 4000
+currentpage = 2683  
 if(len(sys.argv)>0):
     currentpage=int(sys.argv[1])
 currentitem=10

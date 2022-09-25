@@ -1,3 +1,4 @@
+from ast import keyword
 import requests
 import time
 import os
@@ -53,7 +54,7 @@ def checkfolderexist(title):
     return title
 
 
-def getpagehtml(pageurl,protype=0):
+def getpagehtml(pageurl):
     global RETRYTIME
     try:
         resp = requests.get(pageurl, headers=headers,proxies=proxy)
@@ -85,9 +86,9 @@ def getmaxfileNo(dicpath):
         if(int(filename)>maxno):
             maxno = int(filename)
     return maxno
-def docrawler(pageno,items):
-    global totalitems
-    global finisheditem
+
+
+def docrawler(lineindex, keyword,itemindex, totalitem, items):
     for item in items:
         title=item.xpath('div/div[1]/text()')[0]        
         title = title.replace("[", "【").replace("]", "】").replace(
@@ -95,7 +96,7 @@ def docrawler(pageno,items):
         title=checkfolderexist(title)
         #if(not operator.contains(title, "So Hot")):
         #    continue     
-        print("page:【{}/{}】开始下载：{}".format(pageno,totalpage,title))  
+        print("【{}_{}】item:【{}/{}】开始下载：{}".format(lineindex, keyword, itemindex, totalitem, title))
         imgfolder=dictemp.format(title)
         if(not os.path.exists(imgfolder)):
             os.makedirs(imgfolder)
@@ -124,7 +125,7 @@ def docrawler(pageno,items):
                     # preimgname = "{}{}".format(imgfolder, "{}{}".format(
                     #     str(imgindex-1).rjust(3, '0'), os.path.splitext(imgname)[-1]))
                     # if(not os.path.exists(preimgname)):
-                        print("page:【{}/{}】,items:【{}/{}】,subpage:【{}/{}】,imgs:【{}/{}】-{}跳过".format(pageno, totalpage, finisheditem, totalitems, k, maxpage,
+                        print("【{}_{}】,items:【{}/{}】,subpage:【{}/{}】,imgs:【{}/{}】-{}跳过".format(lineindex, keyword, itemindex, totalitem,  k, maxpage,
                                                                                                       imgindex, imgcount,  imgname))
                         imgindex += 1
                         continue
@@ -134,8 +135,8 @@ def docrawler(pageno,items):
                     if(checkfilesize(imgname)):
                         os.remove(imgname)
                         downloadpic(imgname, imgurl)
-                print("page:【{}/{}】,items:【{}/{}】,subpage:【{}/{}】,imgs:【{}/{}】-{}下载完毕".format(pageno, totalpage, finisheditem, totalitems,k,maxpage,
-                                                                        imgindex, imgcount,  imgname))
+                print("【{}_{}】,items:【{}/{}】,subpage:【{}/{}】,imgs:【{}/{}】-{}下载完毕".format(lineindex, keyword, itemindex, totalitem,  k, maxpage,
+                                                                                            imgindex, imgcount,  imgname))             
                 imgindex += 1
         #if(not os.path.dirname(imgfolder)[-2:] == "P]"):  
         tempf = os.path.dirname(imgfolder).split('[')
@@ -144,32 +145,44 @@ def docrawler(pageno,items):
         newpicfolder = "{}[{}P]".format(tempf, imgindex-1)
         if(imgfolder!=newpicfolder):
             os.rename(imgfolder, newpicfolder)    
-        finisheditem += 1
-        print("page:【{}/{}】,items:【{}/{}】_{}_下载完毕".format(pageno,totalpage,finisheditem,totalitems, title))
-        
-
-totalpage=1648
-pageindex = int(sys.argv[1]) #1635
-GroupNum=2
-totalitems=0
-finisheditem=0
-for i in range(pageindex, 0, -1):
-    print("page：【{}/{}】开始下载".format(i,totalpage))
-    starturl=urltemplate.format(i)
-    htmltext=getpagehtml(starturl)
-    htmls=etree.HTML(htmltext)
-    items = htmls.xpath('//div[@class="ml-item"]')
-    totalitems=len(items)
-    finisheditem=0
+        print("【{}_{}】,items:【{}/{}】_{}_下载完毕".format(lineindex, keyword,
+              itemindex, totalitem,  title))
+def writefile(msg):     
+    file_handle=open('E:\\nomatch.txt',mode='a+',encoding='utf-8')
+    file_handle.write(msg+"\n")
+    file_handle.close()
+GroupNum = 1
+queryurltemplate="http://hotgirl.asia/?s="
+f = open("E:\\redownload.txt",encoding='utf-8')
+data=f.readlines()
+f.close()
+lineindex=1
+for line in data:
+    # if(lineindex<407):
+    #     lineindex+=1
+    #     continue
+    splitarray=line.split('\\')
+    keyword=splitarray[len(splitarray)-1]
+    qtitle = keyword.replace('–', " ").replace(' ', '+')
+    qurl = queryurltemplate+qtitle
+    qhtmltext = getpagehtml(qurl)
+    qhtml=etree.HTML(qhtmltext)
+    items = qhtml.xpath('//div[@class="ml-item"]')
+    totalitems = len(items)
+    if(totalitems==0):
+        writefile(line)
+        print("【{}_{}】跳过——{}".format(lineindex, keyword, line))
+        lineindex+=1
+        continue
     #创建多线程
     t_list = []
     for t in range(0, len(items), GroupNum):
-        th = Thread(target=docrawler, args=(
-            i, items[t:t+GroupNum]))
+        th = Thread(target=docrawler, args=(lineindex, keyword,
+                                            t+1, len(items), items[t:t+GroupNum]))
         t_list.append(th)
         th.start()
     for t in t_list:
         t.join()
-    print("page:【{}/{}】下载完毕".format(i, totalpage))
-    time.sleep(3)
+    lineindex += 1
+
 print("Done")
