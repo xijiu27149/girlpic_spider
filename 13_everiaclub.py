@@ -11,8 +11,9 @@ headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
     "Content-Type": "text/html;charset=UTF-8"}
 proxy = {'http': 'http://127.0.0.1:7890', 'https': 'http://127.0.0.1:7890'}
-dictemp ="H:\\folder\\everiaclub\\{}\\"
-ppfolder = "H:\\folder\\everiaclub\\"
+#proxy = {'http': 'http://127.0.0.1:8580', 'https': 'http://127.0.0.1:8580'}
+dictemp ="G:\\folder\\everiaclub\\{}\\"
+ppfolder = "G:\\folder\\everiaclub\\"
 
 RETRYTIME = 0
 def downloadpic(fname, furl,proxytag="no"):
@@ -98,6 +99,8 @@ def docrawler(pageno,items):
         imgindex = 1
         for img in imgs:
             imgurl=img.xpath('@src')[0]
+            if(operator.contains(imgurl,'base64')):
+                imgurl=img.xpath('@data-src')[0]
             imgname = os.path.basename(imgurl)
             imgname = "{}{}".format(imgfolder, "{}{}".format(
                 str(imgindex).rjust(3, '0'), os.path.splitext(imgurl)[-1]))
@@ -123,8 +126,8 @@ def docrawler(pageno,items):
         print("page:【{}/{}】,items:【{}/{}】_{}_下载完毕".format(pageno,totalpage,finisheditem,totalitems, title))
         
 
-totalpage=542
-pageindex=1
+totalpage=665
+pageindex=7
 GroupNum=2
 totalitems=0
 finisheditem=0

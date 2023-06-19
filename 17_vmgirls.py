@@ -9,7 +9,7 @@ import operator
 from urllib import request
 import sys
 
-homeurl="https://www.vmgirls.com/topics/"
+homeurl="https://www.vmgirls.net/topics/"
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.124 Safari/537.36 Edg/102.0.1245.44",
     "Content-Type": "text/html;charset=UTF-8",
@@ -22,10 +22,10 @@ headers = {
 #     },
 # )
 openner = request.build_opener()
-ppfolder="/Users/dujingwei/Temp/folder/vmgirls/"
-dictemp="/Users/dujingwei/Temp/folder/vmgirls/{}/"
-# ppfolder = "H:\\folder\\hotgirl\\"
-# dictemp = "H:\\folder\\hotgirl\\{}\\"
+#ppfolder="/Users/dujingwei/Temp/folder/vmgirls/"
+#dictemp="/Users/dujingwei/Temp/folder/vmgirls/{}/"
+ppfolder = "G:\\folder\\hotgirl\\"
+dictemp = "G:\\folder\\hotgirl\\{}\\"
 
 RETRYTIME = 0
 def downloadpic(fname, furl):
